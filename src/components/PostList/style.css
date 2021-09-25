@@ -1,0 +1,6 @@
+.post-list-item-outer {
+    border: 5px solid #777;
+    margin: 5px auto;
+    padding: 0 5px;
+    cursor: pointer;
+}
