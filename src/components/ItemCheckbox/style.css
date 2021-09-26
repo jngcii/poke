@@ -1,8 +1,0 @@
-.component-item-checkbox {
-    width: 10px;
-    border: 5px solid #000;
-}
-
-.component-item-checkbox[isdone=true] {
-    background-color: #00f;
-}
