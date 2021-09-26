@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useReducer} from "react";
-import {createPlan, createItem} from "./ObjectCreator";
+import {createPost, createItem} from "./ObjectCreator";
 
 const CLICK_POST_LIST_ITEM = "CLICK_POST_LIST_ITEM";
 const CHECK_ITEM = "CHECK_ITEM";
@@ -15,12 +15,12 @@ export const createCheckItemAction = (itemId) => {
 const initialState = {
     currentPost: null,
 
-    plans: [
-        createPlan(1, "first"),
-        createPlan(2, "second"),
-        createPlan(3, "third"),
-        createPlan(4, "fourth"),
-        createPlan(5, "fifth")
+    posts: [
+        createPost(1, "first"),
+        createPost(2, "second"),
+        createPost(3, "third"),
+        createPost(4, "fourth"),
+        createPost(5, "fifth")
     ],
     items: [
         createItem(1, 1, "work", true),

@@ -1,4 +1,4 @@
-export function createPlan(id, title) {
+export function createPost(id, title) {
     return {id, title}
 }
 
