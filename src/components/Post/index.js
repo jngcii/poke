@@ -3,20 +3,33 @@ import "./style.css";
 import {useContextState} from "../../utils/MainContextProvider";
 
 export default React.memo(() => {
-    const {currentPost} = useContextState();
+    const {currentPost, items} = useContextState();
 
-    return (
+    return currentPost ? (
         <div className="component-post-wrapper">
-            {currentPost ? currentPost.id : "Nothing"}
+            <PostHeader post={currentPost}/>
+            <ItemList items={items.filter(it => it.postId === currentPost.id)}/>
         </div>
+    ) : (
+        <div><strong>SELECT THE POST PLZ</strong></div>
     );
 });
 
 // TODO : Input 로직 들어갈때 별도의 파일로 분리 및 패키지 리팩
-const PostHeader = ({ title }) => {
+const PostHeader = ({post}) => {
     return (
-        <header>
-            <h2>{title}</h2>
+        <header className="component-post-header">
+            <strong>{post.title}</strong>
         </header>
-    )
+    );
+};
+
+const ItemList = ({items}) => {
+    return (
+        <div className="component-item-list">
+            {items.map(item =>
+                <div key={item.id} className="component-item" isdone={`${item.isDone}`}>{item.content}</div>)
+            }
+        </div>
+    );
 };
