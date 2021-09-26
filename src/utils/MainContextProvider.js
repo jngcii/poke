@@ -1,7 +1,18 @@
 import React, {createContext, useContext, useReducer} from "react";
 import {createPlan, createItem} from "./ObjectCreator";
 
+const CLICK_POST_LIST_ITEM = "CLICK_POST_LIST_ITEM"
+
+export const createClickPostListItemAction = (post) => {
+    return {
+        type: CLICK_POST_LIST_ITEM,
+        post
+    };
+};
+
 const initialState = {
+    currentPost: null,
+
     plans: [
         createPlan(1, "first"),
         createPlan(2, "second"),
@@ -28,10 +39,26 @@ const initialState = {
 };
 
 function reducer(state, action) {
-    return state;
+    switch (action.type) {
+        case CLICK_POST_LIST_ITEM:
+            if (!action.post) {
+                console.error('Cannot find DispatchContext');
+                return state;
+            }
+
+            if (state.currentPost && state.currentPost.id === action.post.id) {
+                return {...state, currentPost: null};
+            }
+
+            return {...state, currentPost: action.post};
+
+        default:
+            return state;
+    }
 }
 
 const StateContext = createContext();
+const DispatchContext = createContext();
 
 export default ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -50,8 +77,6 @@ export function useContextState() {
     if (!context) throw new Error('Cannot find StateContext');
     return context;
 }
-
-const DispatchContext = createContext();
 
 export function useContextDispatch() {
     const context = useContext(DispatchContext);
