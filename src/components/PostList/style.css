@@ -1,6 +1,18 @@
+.post-list-container {
+    position: relative;
+    transition: height 0.4s;
+}
+
+/* 이 친구는 border 값이 들어가면 안됩니다 (used for positioning) */
 .post-list-item-outer {
+    position: absolute;
+    width: 100%;
+    margin: 5px 0;
+    background-color: #ccc;
+}
+
+/* 이 친구 이하에 스타일링 (used for animating the Item's visibility) */
+.post-list-item-inner {
     border: 5px solid #777;
-    margin: 5px auto;
-    padding: 0 5px;
-    cursor: pointer;
+    padding: 5px;
 }
