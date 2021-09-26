@@ -1,7 +1,5 @@
 import React from "react";
 import {useContextState} from "../../utils/MainContextProvider";
-import PostHeader from "../PostHeader";
-import PostContent from "../PostContent";
 import ItemList from "../ItemList";
 import "./style.css";
 
@@ -20,3 +18,17 @@ export default React.memo(() => {
         <div><strong>SELECT THE POST PLZ</strong></div>
     );
 });
+
+const PostHeader = React.memo(({post}) => {
+    return (
+        <header className="component-post-header">
+            <strong>{post.title}</strong>
+        </header>
+    );
+});
+
+const PostContent = React.memo(({children}) => (
+    <React.Fragment>
+        {children}
+    </React.Fragment>
+));
