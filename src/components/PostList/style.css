@@ -21,7 +21,7 @@
     flex: 1;
 }
 
-.post-list-item-trigger {
+.post-list-item-dragger {
     width: 20px;
     background-color: #000;
 }

@@ -18,7 +18,7 @@ const PostListItem = React.memo(({plan}) => {
         <div className="post-list-item-outer">
             <div className="post-list-item-inner">
                 <PostListItemTitle plan={plan}/>
-                <PostListItemTrigger/>
+                <PostListItemDragger/>
             </div>
         </div>
     );
@@ -38,7 +38,7 @@ const PostListItemTitle = React.memo(({plan}) => {
     );
 });
 
-const PostListItemTrigger = React.memo(() => {
+const PostListItemDragger = React.memo(() => {
     const draggable = useDraggable();
 
     useEffect(() => {
@@ -49,7 +49,7 @@ const PostListItemTrigger = React.memo(() => {
     const disableDrag = () => draggable(false);
 
     return (
-        <div className="post-list-item-trigger" onMouseOver={enableDrag} onMouseLeave={disableDrag}/>
+        <div className="post-list-item-dragger" onMouseOver={enableDrag} onMouseLeave={disableDrag}/>
     );
 });
 
