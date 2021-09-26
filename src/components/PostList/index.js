@@ -1,5 +1,5 @@
-import React from "react";
-import {MuuriComponent} from "muuri-react";
+import React, {useEffect} from "react";
+import {MuuriComponent, useDraggable} from "muuri-react";
 import {useContextState} from "../../utils/MainContextProvider";
 import "./style.css";
 
@@ -17,9 +17,33 @@ const PostListItem = React.memo(({title}) => {
     return (
         <div className="post-list-item-outer">
             <div className="post-list-item-inner">
-                <strong>{title}</strong>
+                <PostListItemTitle title={title} />
+                <PostListItemTrigger/>
             </div>
         </div>
+    );
+})
+
+const PostListItemTitle = React.memo(({title}) => {
+    return (
+        <div className="post-list-item-title">
+            <strong>{title}</strong>
+        </div>
+    );
+})
+
+const PostListItemTrigger = React.memo(() => {
+    const draggable = useDraggable();
+
+    useEffect(() => {
+        draggable(false);
+    }, [])
+
+    const enableDrag = () => draggable(true);
+    const disableDrag = () => draggable(false);
+
+    return (
+        <div className="post-list-item-trigger" onMouseOver={enableDrag} onMouseLeave={disableDrag}/>
     );
 })
 

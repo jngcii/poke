@@ -13,6 +13,16 @@
 
 /* 이 친구 이하에 스타일링 (used for animating the Item's visibility) */
 .post-list-item-inner {
+    display: flex;
     border: 5px solid #777;
     padding: 5px;
+}
+
+.post-list-item-title {
+    flex: 1;
+}
+
+.post-list-item-trigger {
+    width: 20px;
+    background-color: #000;
 }
