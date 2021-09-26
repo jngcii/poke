@@ -4,41 +4,41 @@ import {createClickPostListItemAction, useContextDispatch, useContextState} from
 import "./style.css";
 
 export default React.memo(() => {
-    const {plans} = useContextState();
+    const {posts} = useContextState();
 
     return (
         <MuuriComponent {...girdProps}>
-            {plans.map(plan => <PostListItem key={plan.id} plan={plan}/>)}
+            {posts.map(post => <PostListItem key={post.id} post={post}/>)}
         </MuuriComponent>
     );
 });
 
-const PostListItem = React.memo(({plan}) => {
+const PostListItem = React.memo(({post}) => {
     return (
         <div className="post-list-item-outer">
             <div className="post-list-item-inner">
-                <PostListItemTitle plan={plan}/>
-                <PostListItemTrigger/>
+                <PostListItemTitle post={post}/>
+                <PostListItemDragger/>
             </div>
         </div>
     );
 });
 
-const PostListItemTitle = React.memo(({plan}) => {
+const PostListItemTitle = React.memo(({post}) => {
     const dispatch = useContextDispatch();
 
     const onClick = () => {
-        dispatch(createClickPostListItemAction(plan))
+        dispatch(createClickPostListItemAction(post))
     }
 
     return (
         <div className="post-list-item-title" onClick={onClick}>
-            <strong>{plan.title}</strong>
+            <strong>{post.title}</strong>
         </div>
     );
 });
 
-const PostListItemTrigger = React.memo(() => {
+const PostListItemDragger = React.memo(() => {
     const draggable = useDraggable();
 
     useEffect(() => {
@@ -49,7 +49,7 @@ const PostListItemTrigger = React.memo(() => {
     const disableDrag = () => draggable(false);
 
     return (
-        <div className="post-list-item-trigger" onMouseOver={enableDrag} onMouseLeave={disableDrag}/>
+        <div className="post-list-item-dragger" onMouseOver={enableDrag} onMouseLeave={disableDrag}/>
     );
 });
 

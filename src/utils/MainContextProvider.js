@@ -1,24 +1,26 @@
 import React, {createContext, useContext, useReducer} from "react";
-import {createPlan, createItem} from "./ObjectCreator";
+import {createPost, createItem} from "./ObjectCreator";
 
-const CLICK_POST_LIST_ITEM = "CLICK_POST_LIST_ITEM"
+const CLICK_POST_LIST_ITEM = "CLICK_POST_LIST_ITEM";
+const CHECK_ITEM = "CHECK_ITEM";
 
 export const createClickPostListItemAction = (post) => {
-    return {
-        type: CLICK_POST_LIST_ITEM,
-        post
-    };
+    return {type: CLICK_POST_LIST_ITEM,post};
+};
+
+export const createCheckItemAction = (itemId) => {
+    return {type: CHECK_ITEM, itemId};
 };
 
 const initialState = {
     currentPost: null,
 
-    plans: [
-        createPlan(1, "first"),
-        createPlan(2, "second"),
-        createPlan(3, "third"),
-        createPlan(4, "fourth"),
-        createPlan(5, "fifth")
+    posts: [
+        createPost(1, "first"),
+        createPost(2, "second"),
+        createPost(3, "third"),
+        createPost(4, "fourth"),
+        createPost(5, "fifth")
     ],
     items: [
         createItem(1, 1, "work", true),
@@ -51,6 +53,27 @@ function reducer(state, action) {
             }
 
             return {...state, currentPost: action.post};
+
+        case CHECK_ITEM:
+            const {itemId} = action;
+
+            if (!itemId) {
+                console.error('Cannot find DispatchContext');
+                return state;
+            }
+
+            let checkedItem = state.items.find(it => it.id === itemId);
+
+            if (!checkedItem) {
+                console.error(`Cannot find Item(id=${itemId})`);
+            }
+
+            checkedItem = { ... checkedItem, isDone: !checkedItem.isDone };
+
+            return {
+                ...state,
+                items: state.items.map(origin => origin.id === itemId ? checkedItem : origin)
+            };
 
         default:
             return state;
