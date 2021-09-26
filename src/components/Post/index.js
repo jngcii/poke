@@ -1,6 +1,7 @@
 import React from "react";
 import {useContextState} from "../../utils/MainContextProvider";
 import ItemList from "../ItemList";
+import ButtonRemovePost from "../ButtonRemovePost";
 import "./style.css";
 
 export default React.memo(() => {
@@ -8,7 +9,12 @@ export default React.memo(() => {
 
     return currentPost ? (
         <div className="component-post-wrapper">
-            <PostHeader post={currentPost}/>
+            <PostHeader>
+                <PostHeaderTitle post={currentPost}/>
+                <PostHeaderOptions>
+                    <ButtonRemovePost post={currentPost} />
+                </PostHeaderOptions>
+            </PostHeader>
 
             <PostContent>
                 <ItemList items={items.filter(it => it.postId === currentPost.id)}/>
@@ -19,11 +25,27 @@ export default React.memo(() => {
     );
 });
 
-const PostHeader = React.memo(({post}) => {
+const PostHeader = React.memo(({children}) => {
     return (
         <header className="component-post-header">
-            <strong>{post.title}</strong>
+            {children}
         </header>
+    );
+});
+
+const PostHeaderTitle = React.memo(({post}) => {
+    return (
+        <div className="component-post-header-title">
+            <strong>{post.title}</strong>
+        </div>
+    );
+});
+
+const PostHeaderOptions = React.memo(({children}) => {
+    return (
+        <div className="component-post-header-options">
+            {children}
+        </div>
     );
 });
 

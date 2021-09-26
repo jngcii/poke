@@ -1,6 +1,6 @@
 .post-list-container {
     position: relative;
-    transition: height 0.4s;
+    transition: height 0.3s;
 }
 
 /* 이 친구는 border 값이 들어가면 안됩니다 (used for positioning) */
