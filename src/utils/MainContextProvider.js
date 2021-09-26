@@ -1,8 +1,18 @@
 import React, {createContext, useContext, useReducer} from "react";
 import {createPost, createItem} from "./ObjectCreator";
 
+const ADD_POST = "ADD_POST";
+const REMOVE_POST = "REMOVE_POST";
 const CLICK_POST_LIST_ITEM = "CLICK_POST_LIST_ITEM";
 const CHECK_ITEM = "CHECK_ITEM";
+
+export const createAddPostAction = () => {
+    return {type: ADD_POST};
+};
+
+export const createRemovePostAction = (postId) => {
+    return {type: REMOVE_POST, postId};
+};
 
 export const createClickPostListItemAction = (post) => {
     return {type: CLICK_POST_LIST_ITEM, post};
@@ -42,9 +52,29 @@ const initialState = {
 
 function reducer(state, action) {
     switch (action.type) {
+        case ADD_POST:
+            const nextPostId = state.posts.length > 0 ? Math.max(...state.posts.map(it => it.id)) + 1 : 1;
+
+            return {
+                ...state,
+                posts: [createPost(nextPostId, "New List"), ...state.posts]
+            };
+
+        case REMOVE_POST:
+            if (!action.postId) {
+                console.error('Cannot find postId in action');
+                return state;
+            }
+
+            return {
+                ...state,
+                currentPost: null,
+                posts: state.posts.filter(it => it.id !== action.postId)
+            };
+
         case CLICK_POST_LIST_ITEM:
             if (!action.post) {
-                console.error('Cannot find DispatchContext');
+                console.error('Cannot find post in action');
                 return state;
             }
 
@@ -58,7 +88,7 @@ function reducer(state, action) {
             const {itemId} = action;
 
             if (!itemId) {
-                console.error('Cannot find DispatchContext');
+                console.error('Cannot find itemId in action');
                 return state;
             }
 
