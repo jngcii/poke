@@ -5,7 +5,7 @@ const CLICK_POST_LIST_ITEM = "CLICK_POST_LIST_ITEM";
 const CHECK_ITEM = "CHECK_ITEM";
 
 export const createClickPostListItemAction = (post) => {
-    return {type: CLICK_POST_LIST_ITEM,post};
+    return {type: CLICK_POST_LIST_ITEM, post};
 };
 
 export const createCheckItemAction = (itemId) => {
@@ -68,7 +68,7 @@ function reducer(state, action) {
                 console.error(`Cannot find Item(id=${itemId})`);
             }
 
-            checkedItem = { ... checkedItem, isDone: !checkedItem.isDone };
+            checkedItem = {...checkedItem, isDone: !checkedItem.isDone};
 
             return {
                 ...state,
