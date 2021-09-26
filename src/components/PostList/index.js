@@ -1,6 +1,6 @@
-import React from "react";
-import {MuuriComponent} from "muuri-react";
-import {useContextState} from "../../utils/MainContextProvider";
+import React, {useEffect} from "react";
+import {MuuriComponent, useDraggable} from "muuri-react";
+import {createClickPostListItemAction, useContextDispatch, useContextState} from "../../utils/MainContextProvider";
 import "./style.css";
 
 export default React.memo(() => {
@@ -8,20 +8,50 @@ export default React.memo(() => {
 
     return (
         <MuuriComponent {...girdProps}>
-            {plans.map(plan => <PostListItem key={plan.id} title={plan.title}/>)}
+            {plans.map(plan => <PostListItem key={plan.id} plan={plan}/>)}
         </MuuriComponent>
     );
-})
+});
 
-const PostListItem = React.memo(({title}) => {
+const PostListItem = React.memo(({plan}) => {
     return (
         <div className="post-list-item-outer">
             <div className="post-list-item-inner">
-                <strong>{title}</strong>
+                <PostListItemTitle plan={plan}/>
+                <PostListItemTrigger/>
             </div>
         </div>
     );
-})
+});
+
+const PostListItemTitle = React.memo(({plan}) => {
+    const dispatch = useContextDispatch();
+
+    const onClick = () => {
+        dispatch(createClickPostListItemAction(plan))
+    }
+
+    return (
+        <div className="post-list-item-title" onClick={onClick}>
+            <strong>{plan.title}</strong>
+        </div>
+    );
+});
+
+const PostListItemTrigger = React.memo(() => {
+    const draggable = useDraggable();
+
+    useEffect(() => {
+        draggable(false);
+    }, [])
+
+    const enableDrag = () => draggable(true);
+    const disableDrag = () => draggable(false);
+
+    return (
+        <div className="post-list-item-trigger" onMouseOver={enableDrag} onMouseLeave={disableDrag}/>
+    );
+});
 
 const girdProps = {
     dragEnabled: true,
@@ -41,4 +71,4 @@ const girdProps = {
     itemDraggingClass: "post-list-item-outer-dragging",
     itemReleasingClass: "post-list-item-outer-releasing",
     itemPlaceholderClass: "post-list-item-outer-placeholder"
-}
+};
