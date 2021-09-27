@@ -53,11 +53,15 @@ const initialState = {
 function reducer(state, action) {
     switch (action.type) {
         case ADD_POST:
-            const nextPostId = state.posts.length > 0 ? Math.max(...state.posts.map(it => it.id)) + 1 : 1;
+            const newPost = createPost(
+                state.posts.length > 0 ? Math.max(...state.posts.map(it => it.id)) + 1 : 1,
+                "New List"
+            )
 
             return {
                 ...state,
-                posts: [createPost(nextPostId, "New List"), ...state.posts]
+                currentPost: newPost,
+                posts: [newPost, ...state.posts]
             };
 
         case REMOVE_POST:
