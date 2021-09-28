@@ -1,11 +1,12 @@
 import React from "react";
-import {createAddPostAction, useContextDispatch} from "../../utils/MainContextProvider";
+import {useDispatch} from "react-redux";
+import {addPost} from "../../redux/slices/postSlice";
 import "./style.css";
 
 export default React.memo(() => {
-    const dispatch = useContextDispatch();
+    const dispatch = useDispatch();
 
-    const onAdd = () => dispatch(createAddPostAction());
+    const onAdd = () => dispatch(addPost());
 
     return (
         <div className="component-button-add-post-wrapper">

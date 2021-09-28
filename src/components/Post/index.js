@@ -1,11 +1,11 @@
 import React from "react";
-import {useContextState} from "../../utils/MainContextProvider";
+import {useSelector} from "react-redux";
 import ItemList from "../ItemList";
 import ButtonRemovePost from "../ButtonRemovePost";
 import "./style.css";
 
 export default React.memo(() => {
-    const {currentPost, items} = useContextState();
+    const { post: { currentPost }, item: { items } } = useSelector(state => state);
 
     return currentPost ? (
         <div className="component-post-wrapper">

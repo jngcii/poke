@@ -1,10 +1,11 @@
 import React, {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {selectPost} from "../../redux/slices/postSlice";
 import {MuuriComponent, useDraggable} from "muuri-react";
-import {createClickPostListItemAction, useContextDispatch, useContextState} from "../../utils/MainContextProvider";
 import "./style.css";
 
 export default React.memo(() => {
-    const {posts} = useContextState();
+    const { posts } = useSelector(state => state.post);
 
     return (
         <MuuriComponent {...girdProps}>
@@ -25,10 +26,10 @@ const PostListItem = React.memo(({post}) => {
 });
 
 const PostListItemTitle = React.memo(({post}) => {
-    const dispatch = useContextDispatch();
+    const dispatch = useDispatch();
 
     const onClick = () => {
-        dispatch(createClickPostListItemAction(post))
+        dispatch(selectPost({post}));
     }
 
     return (
