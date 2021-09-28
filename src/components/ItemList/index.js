@@ -1,5 +1,6 @@
 import React from "react";
-import {createCheckItemAction, useContextDispatch} from "../../utils/MainContextProvider";
+import {useDispatch} from "react-redux";
+import {checkItem} from "../../redux/slices/itemSlice";
 import "./style.css";
 
 export default React.memo(({items}) => {
@@ -19,9 +20,9 @@ const Item = React.memo((props) => {
 });
 
 const ItemCheckbox = React.memo(({item}) => {
-    const dispatch = useContextDispatch();
+    const dispatch = useDispatch();
 
-    const onCheck = () => dispatch(createCheckItemAction(item.id));
+    const onCheck = () => dispatch(checkItem({itemId: item.id}));
 
     return <div className="component-item-checkbox" isdone={`${item.isDone}`} onClick={onCheck}/>;
 });

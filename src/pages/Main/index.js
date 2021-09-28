@@ -1,5 +1,4 @@
 import React from "react";
-import MainContextProvider from "../../utils/MainContextProvider";
 import MainHeader from "../../components/MainHeader";
 import PostList from "../../components/PostList";
 import ButtonAddPost from "../../components/ButtonAddPost";
@@ -7,7 +6,7 @@ import Post from "../../components/Post";
 import "./style.css";
 
 export default React.memo(() => (
-    <MainContextProvider>
+    <div>
         <header className={"screen-main-header"}>
             <MainHeader/>
         </header>
@@ -21,5 +20,5 @@ export default React.memo(() => (
                 <Post/>
             </div>
         </section>
-    </MainContextProvider>
+    </div>
 ))
