@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {selectPost} from "../../redux/slices/postSlice";
 import {MuuriComponent, useDraggable} from "muuri-react";
-import "./style.css";
+import "./style.scss";
 
 export default React.memo(() => {
     const { posts } = useSelector(state => state.post);

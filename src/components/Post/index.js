@@ -2,7 +2,7 @@ import React from "react";
 import {useSelector} from "react-redux";
 import ItemList from "../ItemList";
 import ButtonRemovePost from "../ButtonRemovePost";
-import "./style.css";
+import "./style.scss";
 
 export default React.memo(() => {
     const { post: { currentPost }, item: { items } } = useSelector(state => state);

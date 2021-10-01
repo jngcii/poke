@@ -1,4 +1,5 @@
 const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
@@ -29,12 +30,16 @@ const config = {
                 ]
             },
             {
-                test: /\.css$/,
+                test: /\.s[ac]ss$/i,
                 include: path.resolve(__dirname, 'src'),
-                use: ['style-loader', 'css-loader']
+                exclude: /node_modeuls/,
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             }
         ]
-    }
+    },
+    plugins: [
+        new MiniCssExtractPlugin({ filename: '[name].css' }),
+    ]
 };
 
 module.exports = (env, {mode}) => {
@@ -48,6 +53,7 @@ module.exports = (env, {mode}) => {
             open: true
         }
         config.plugins = [
+            ...config.plugins,
             new HtmlWebpackPlugin({
                 title: 'poke (dev)',
                 template: './public/index.html'

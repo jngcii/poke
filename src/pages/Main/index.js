@@ -3,7 +3,7 @@ import MainHeader from "../../components/MainHeader";
 import PostList from "../../components/PostList";
 import ButtonAddPost from "../../components/ButtonAddPost";
 import Post from "../../components/Post";
-import "./style.css";
+import "./style.scss";
 
 export default React.memo(() => (
     <div>

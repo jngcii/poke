@@ -1,7 +1,7 @@
 import React from "react";
 import {useDispatch} from "react-redux";
 import {checkItem} from "../../redux/slices/itemSlice";
-import "./style.css";
+import "./style.scss";
 
 export default React.memo(({items}) => {
     const children = items.map(item => <Item key={item.id} item={item}/>);

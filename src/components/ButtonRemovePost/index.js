@@ -1,7 +1,7 @@
 import React from "react";
 import {useDispatch} from "react-redux";
 import {removePost} from "../../redux/slices/postSlice";
-import "./style.css";
+import "./style.scss";
 
 export default React.memo(({post}) => {
     const dispatch = useDispatch();
