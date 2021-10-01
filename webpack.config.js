@@ -1,6 +1,7 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
+const config = {
     entry: {
         index: [path.resolve(__dirname, 'src/index.js')]
     },
@@ -21,7 +22,8 @@ module.exports = {
                             presets: [
                                 '@babel/preset-env',
                                 '@babel/preset-react'
-                            ]
+                            ],
+                            plugins: ['@babel/plugin-transform-runtime'],
                         }
                     }
                 ]
@@ -33,4 +35,24 @@ module.exports = {
             }
         ]
     }
+};
+
+module.exports = (env, {mode}) => {
+    if (mode === 'development') {
+        config.devtool = 'inline-source-map';
+        config.devServer = {
+            static: './dist',
+            compress: true,
+            port: 3000,
+            hot: true,
+            open: true
+        }
+        config.plugins = [
+            new HtmlWebpackPlugin({
+                title: 'poke (dev)',
+                template: './public/index.html'
+            }),
+        ]
+    }
+    return config;
 };
