@@ -44,7 +44,7 @@ export const postSlice = createSlice({
             if (!post) {
                 console.error("Cannot find post in action.payload");
             } else {
-                state.currentPost = post;
+                state.currentPost = (state.currentPost && state.currentPost.id === post.id) ? null : post;
             }
         }
     }
