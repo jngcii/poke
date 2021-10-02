@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
   entry: {
-    index: [path.resolve(__dirname, 'src/index.js')],
+    index: [path.resolve(__dirname, 'src/index.tsx')],
   },
   output: {
     filename: 'index.js',
@@ -13,7 +13,7 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.[jt]sx?$/,
         include: path.resolve(__dirname, 'src'),
         exclude: /node_modules/,
         use: [
@@ -23,6 +23,7 @@ const config = {
               presets: [
                 '@babel/preset-env',
                 '@babel/preset-react',
+                '@babel/preset-typescript',
               ],
               plugins: ['@babel/plugin-transform-runtime'],
             },
@@ -38,7 +39,7 @@ const config = {
     ],
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['', '.ts', '.tsx', '.js', '.jsx'],
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: '[name].css' }),

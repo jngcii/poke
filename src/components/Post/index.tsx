@@ -1,6 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ItemList from '../ItemList';
+import { Post } from '../../types/object';
+import { RootState } from '../../redux/store';
 import ButtonRemovePost from '../ButtonRemovePost';
 import './style.scss';
 
@@ -8,7 +10,7 @@ export default React.memo(() => {
   const {
     post: { currentPost },
     item: { items },
-  } = useSelector((state) => state);
+  } = useSelector((state: RootState) => state);
 
   return currentPost ? (
     <div className="component-post-wrapper">
@@ -32,7 +34,7 @@ export default React.memo(() => {
 
 const PostHeader = React.memo(({ children }) => <header className="component-post-header">{children}</header>);
 
-const PostHeaderTitle = React.memo(({ post }) => (
+const PostHeaderTitle = React.memo(({ post }: PostProps) => (
   <div className="component-post-header-title">
     <strong>{post.title}</strong>
   </div>
@@ -41,3 +43,5 @@ const PostHeaderTitle = React.memo(({ post }) => (
 const PostHeaderOptions = React.memo(({ children }) => <div className="component-post-header-options">{children}</div>);
 
 const PostContent = React.memo(({ children }) => <>{children}</>);
+
+type PostProps = { post: Post }
