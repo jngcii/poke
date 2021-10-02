@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MuuriComponent, useDraggable } from 'muuri-react';
 import { selectPost } from '../../redux/slices/postSlice';
+import { RootState } from '../../redux/store';
+import { Post } from '../../types/object';
 import './style.scss';
 
 export default React.memo(() => {
-  const { posts } = useSelector((state) => state.post);
+  const { posts } = useSelector((state: RootState) => state.post);
 
   return (
     <MuuriComponent {...girdProps}>
@@ -16,7 +18,7 @@ export default React.memo(() => {
   );
 });
 
-const PostListItem = React.memo(({ post }) => (
+const PostListItem = React.memo(({ post }: PostProps) => (
   <div className="post-list-item-outer">
     <div className="post-list-item-inner">
       <PostListItemTitle post={post} />
@@ -25,7 +27,7 @@ const PostListItem = React.memo(({ post }) => (
   </div>
 ));
 
-const PostListItemTitle = React.memo(({ post }) => {
+const PostListItemTitle = React.memo(({ post }: PostProps) => {
   const dispatch = useDispatch();
 
   const onClick = () => {
@@ -77,3 +79,7 @@ const girdProps = {
   itemReleasingClass: 'post-list-item-outer-releasing',
   itemPlaceholderClass: 'post-list-item-outer-placeholder',
 };
+
+type PostProps = {
+  post: Post
+}

@@ -17,10 +17,10 @@ export const postSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    addPost: state => {
+    addPost: (state) => {
       const newPost = createPost(
         state.posts.length > 0
-          ? Math.max(...state.posts.map(it => it.id)) + 1
+          ? Math.max(...state.posts.map((it) => it.id)) + 1
           : 1,
         'New List',
       );
@@ -36,7 +36,7 @@ export const postSlice = createSlice({
         console.error('Cannot find postId in action.payload');
       } else {
         state.currentPost = null;
-        state.posts = state.posts.filter(it => it.id !== postId);
+        state.posts = state.posts.filter((it) => it.id !== postId);
       }
     },
 
@@ -46,8 +46,7 @@ export const postSlice = createSlice({
       if (!post) {
         console.error('Cannot find post in action.payload');
       } else {
-        state.currentPost =
-          state.currentPost && state.currentPost.id === post.id ? null : post;
+        state.currentPost = state.currentPost && state.currentPost.id === post.id ? null : post;
       }
     },
   },

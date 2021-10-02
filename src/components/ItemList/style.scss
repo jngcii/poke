@@ -15,7 +15,7 @@
     border: 5px solid #000;
 }
 
-.component-item-checkbox[isdone=true] {
+.component-item-checkbox.done {
     background-color: #00f;
 }
 
