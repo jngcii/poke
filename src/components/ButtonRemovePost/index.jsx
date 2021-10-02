@@ -9,8 +9,8 @@ export default React.memo(({ post }) => {
   const onRemove = () => dispatch(removePost({ postId: post.id }));
 
   return (
-    <strong className="component-button-remove-post" onClick={onRemove}>
+    <button className="component-button-remove-post" type="button" onClick={onRemove}>
       TRASH
-    </strong>
+    </button>
   );
 });

@@ -23,8 +23,10 @@ const ItemCheckbox = React.memo(({ item }) => {
   const onCheck = () => dispatch(checkItem({ itemId: item.id }));
 
   return (
-    <div
+    <button
       className="component-item-checkbox"
+      type="button"
+      aria-label="Check"
       isdone={`${item.isDone}`}
       onClick={onCheck}
     />

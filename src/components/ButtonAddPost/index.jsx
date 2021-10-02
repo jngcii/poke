@@ -10,9 +10,9 @@ export default React.memo(() => {
 
   return (
     <div className="component-button-add-post-wrapper">
-      <span className="component-button-add-post-btn" onClick={onAdd}>
+      <button className="component-button-add-post-btn" type="button" onClick={onAdd}>
         NEW
-      </span>
+      </button>
     </div>
   );
 });
