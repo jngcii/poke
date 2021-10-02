@@ -43,6 +43,10 @@ const config = {
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: '[name].css' }),
+    new HtmlWebpackPlugin({
+      title: 'poke',
+      template: './public/index.html',
+    }),
   ],
 };
 
@@ -56,13 +60,6 @@ module.exports = (env, { mode }) => {
       hot: true,
       open: true,
     };
-    config.plugins = [
-      ...config.plugins,
-      new HtmlWebpackPlugin({
-        title: 'poke (dev)',
-        template: './public/index.html',
-      }),
-    ];
   }
   return config;
 };
