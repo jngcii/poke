@@ -5,27 +5,25 @@ import { selectPost } from '../../redux/slices/postSlice';
 import './style.scss';
 
 export default React.memo(() => {
-  const { posts } = useSelector(state => state.post);
+  const { posts } = useSelector((state) => state.post);
 
   return (
     <MuuriComponent {...girdProps}>
-      {posts.map(post => (
+      {posts.map((post) => (
         <PostListItem key={post.id} post={post} />
       ))}
     </MuuriComponent>
   );
 });
 
-const PostListItem = React.memo(({ post }) => {
-  return (
-    <div className="post-list-item-outer">
-      <div className="post-list-item-inner">
-        <PostListItemTitle post={post} />
-        <PostListItemDragger />
-      </div>
+const PostListItem = React.memo(({ post }) => (
+  <div className="post-list-item-outer">
+    <div className="post-list-item-inner">
+      <PostListItemTitle post={post} />
+      <PostListItemDragger />
     </div>
-  );
-});
+  </div>
+));
 
 const PostListItemTitle = React.memo(({ post }) => {
   const dispatch = useDispatch();

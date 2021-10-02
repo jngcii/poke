@@ -8,7 +8,7 @@ export default React.memo(() => {
   const {
     post: { currentPost },
     item: { items },
-  } = useSelector(state => state);
+  } = useSelector((state) => state);
 
   return currentPost ? (
     <div className="component-post-wrapper">
@@ -20,7 +20,7 @@ export default React.memo(() => {
       </PostHeader>
 
       <PostContent>
-        <ItemList items={items.filter(it => it.postId === currentPost.id)} />
+        <ItemList items={items.filter((it) => it.postId === currentPost.id)} />
       </PostContent>
     </div>
   ) : (
@@ -30,20 +30,14 @@ export default React.memo(() => {
   );
 });
 
-const PostHeader = React.memo(({ children }) => {
-  return <header className="component-post-header">{children}</header>;
-});
+const PostHeader = React.memo(({ children }) => <header className="component-post-header">{children}</header>);
 
-const PostHeaderTitle = React.memo(({ post }) => {
-  return (
-    <div className="component-post-header-title">
-      <strong>{post.title}</strong>
-    </div>
-  );
-});
+const PostHeaderTitle = React.memo(({ post }) => (
+  <div className="component-post-header-title">
+    <strong>{post.title}</strong>
+  </div>
+));
 
-const PostHeaderOptions = React.memo(({ children }) => {
-  return <div className="component-post-header-options">{children}</div>;
-});
+const PostHeaderOptions = React.memo(({ children }) => <div className="component-post-header-options">{children}</div>);
 
 const PostContent = React.memo(({ children }) => <>{children}</>);
