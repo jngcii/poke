@@ -31,7 +31,7 @@ const PostListItemTitle = React.memo(({ post }: PostProps) => {
   const dispatch = useDispatch();
 
   const onClick = () => {
-    dispatch(selectPost({ post }));
+    dispatch(selectPost(post));
   };
 
   return (

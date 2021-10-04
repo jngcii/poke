@@ -7,7 +7,7 @@ import './style.scss';
 export default React.memo(({ post }: PostProps) => {
   const dispatch = useDispatch();
 
-  const onRemove = () => dispatch(removePost({ postId: post.id }));
+  const onRemove = () => dispatch(removePost(post.id));
 
   return (
     <button className="component-button-remove-post" type="button" onClick={onRemove}>
