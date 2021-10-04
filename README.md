@@ -1,6 +1,6 @@
-# POKE
+# POKE Client
 
-### poke what you think
+### Front-End POKE Application by React
 
 > Issue tracking : https://trello.com/b/fsN2PnFm/poke
 
