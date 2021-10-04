@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { createPost } from '../utils/objectCreator';
 import { Post } from '../../types/object';
 import repository from '../api/repository';
 
@@ -21,30 +20,19 @@ export const getAllPost = createAsyncThunk(
   'posts/getAllStatus',
   async () => repository.getAllPost(),
 );
+export const addPost = createAsyncThunk<void, Post>(
+  'posts/addPostStatus',
+  async (newPost) => repository.addPost(newPost),
+);
+export const removePost = createAsyncThunk<void, number>(
+  'posts/removePostStatus',
+  async (postId) => repository.removePost(postId),
+);
 
 export const postSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    addPost: (state: InitialState) => {
-      const newPost = createPost(
-        state.posts.length > 0
-          ? Math.max(...state.posts.map((it) => it.id)) + 1
-          : 1,
-        'New List',
-      );
-
-      state.currentPost = newPost;
-      state.posts = [newPost, ...state.posts];
-    },
-
-    removePost: (state: InitialState, action: PayloadAction<number>) => {
-      const postId = action.payload;
-
-      state.currentPost = null;
-      state.posts = state.posts.filter((it) => it.id !== postId);
-    },
-
     selectPost: (state: InitialState, action: PayloadAction<Post>) => {
       const post = action.payload;
 
@@ -65,9 +53,25 @@ export const postSlice = createSlice({
       state.loadingPosts = false;
       state.failToLoadPosts = true;
     },
+
+    [addPost.pending.type]: (state: InitialState, { meta: { arg } }) => {
+      state.posts = [arg, ...state.posts];
+      state.currentPost = arg;
+    },
+    [addPost.rejected.type]: (state: InitialState, { meta: { arg } }) => {
+      // eslint-disable-next-line no-alert
+      alert('Failed To Add Post!');
+      state.posts = state.posts.filter((it) => it.id !== arg.id);
+      state.currentPost = null;
+    },
+
+    [removePost.pending.type]: (state: InitialState, { meta: { arg } }) => {
+      state.posts = state.posts.filter((it) => it.id !== arg);
+      state.currentPost = null;
+    },
   },
 });
 
-export const { addPost, removePost, selectPost } = postSlice.actions;
+export const { selectPost } = postSlice.actions;
 
 export default postSlice.reducer;

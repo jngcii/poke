@@ -18,20 +18,15 @@ export const getAllItem = createAsyncThunk(
   'items/getAllStatus',
   async () => repository.getAllItem(),
 );
+export const checkItem = createAsyncThunk<void, number>(
+  'items/checkItemStatus',
+  async (itemId) => repository.checkItem(itemId),
+);
 
 export const itemSlice = createSlice({
   name: 'items',
   initialState,
   reducers: {
-    checkItem: (state: InitialState, action: PayloadAction<number>) => {
-      const checkedItem = state.items.find((it) => it.id === action.payload);
-
-      if (!checkedItem) {
-        console.error(`Cannot find Item(id=${action.payload})`);
-      } else {
-        checkedItem.isDone = !checkedItem.isDone;
-      }
-    },
   },
 
   extraReducers: {
@@ -47,11 +42,26 @@ export const itemSlice = createSlice({
       state.loadingItems = false;
       state.failToLoadItems = true;
     },
+
+    [checkItem.pending.type]: (state: InitialState, { meta: { arg } }) => {
+      const checkedItem = state.items.find((it) => it.id === arg);
+
+      if (!checkedItem) {
+        console.error(`Cannot find Item(id=${arg})`);
+      } else {
+        checkedItem.isDone = !checkedItem.isDone;
+      }
+    },
+    [checkItem.rejected.type]: (state: InitialState, { meta: { arg } }) => {
+      // eslint-disable-next-line no-alert
+      alert('Failed To Check Item!');
+
+      const checkedItem = state.items.find((it) => it.id === arg);
+      if (checkedItem !== undefined) checkedItem.isDone = !checkedItem.isDone;
+    },
   },
 });
 
-const { actions, reducer } = itemSlice;
-
-export const { checkItem } = actions;
+const { reducer } = itemSlice;
 
 export default reducer;
