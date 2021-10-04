@@ -1,7 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createPost } from '../utils/objectCreator';
+import { Post } from '../../types/object';
 
-const initialState = {
+type InitialState = {
+  currentPost: Post | null,
+  posts: Post[]
+}
+
+const initialState: InitialState = {
   currentPost: null,
 
   posts: [

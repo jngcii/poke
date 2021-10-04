@@ -1,0 +1,14 @@
+name: test-and-build-on-push
+on: [push]
+jobs:
+  test-on-push:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.15.0'
+      - run: npm install --global yarn
+      - run: yarn install
+      - run: yarn test
+      - run: yarn build.dev
