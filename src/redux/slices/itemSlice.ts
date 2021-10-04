@@ -1,49 +1,67 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { createItem } from '../utils/objectCreator';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Item } from '../../types/object';
+import repository from '../api/repository';
 
-const initialState = {
-  items: [
-    createItem(1, 1, 'work', true),
-    createItem(2, 1, 'fitness', false),
-    createItem(3, 1, 'read book', false),
+type InitialState = {
+  loadingItems: boolean,
+  failToLoadItems: boolean,
+  items: Item[]
+}
 
-    createItem(4, 2, 'work', true),
-    createItem(5, 2, 'shopping', true),
-    createItem(6, 2, 'fitness', true),
-    createItem(7, 2, 'read book', false),
-
-    createItem(8, 5, 'egg', false),
-    createItem(9, 5, 'milk', false),
-    createItem(10, 5, 'yogurt', false),
-    createItem(11, 5, 'cereal', false),
-    createItem(12, 5, 'salmon', false),
-  ],
+const initialState: InitialState = {
+  loadingItems: true,
+  failToLoadItems: false,
+  items: [],
 };
+
+export const getAllItem = createAsyncThunk(
+  'items/getAllStatus',
+  async () => repository.getAllItem(),
+);
+export const checkItem = createAsyncThunk<void, number>(
+  'items/checkItemStatus',
+  async (itemId) => repository.checkItem(itemId),
+);
 
 export const itemSlice = createSlice({
   name: 'items',
   initialState,
   reducers: {
-    checkItem: (state, action) => {
-      const { itemId } = action.payload;
+  },
 
-      if (!itemId) {
-        console.error('Cannot find itemId in action.payload');
+  extraReducers: {
+    [getAllItem.pending.type]: (state: InitialState) => {
+      state.loadingItems = true;
+      state.failToLoadItems = false;
+    },
+    [getAllItem.fulfilled.type]: (state: InitialState, action: PayloadAction<Item[]>) => {
+      state.loadingItems = false;
+      state.items = action.payload;
+    },
+    [getAllItem.rejected.type]: (state: InitialState) => {
+      state.loadingItems = false;
+      state.failToLoadItems = true;
+    },
+
+    [checkItem.pending.type]: (state: InitialState, { meta: { arg } }) => {
+      const checkedItem = state.items.find((it) => it.id === arg);
+
+      if (!checkedItem) {
+        console.error(`Cannot find Item(id=${arg})`);
       } else {
-        const checkedItem = state.items.find(it => it.id === itemId);
-
-        if (!checkedItem) {
-          console.error(`Cannot find Item(id=${itemId})`);
-        } else {
-          checkedItem.isDone = !checkedItem.isDone;
-        }
+        checkedItem.isDone = !checkedItem.isDone;
       }
+    },
+    [checkItem.rejected.type]: (state: InitialState, { meta: { arg } }) => {
+      // eslint-disable-next-line no-alert
+      alert('Failed To Check Item!');
+
+      const checkedItem = state.items.find((it) => it.id === arg);
+      if (checkedItem !== undefined) checkedItem.isDone = !checkedItem.isDone;
     },
   },
 });
 
-const { actions, reducer } = itemSlice;
-
-export const { checkItem } = actions;
+const { reducer } = itemSlice;
 
 export default reducer;
