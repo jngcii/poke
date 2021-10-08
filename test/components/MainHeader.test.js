@@ -1,15 +1,14 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import { shallow } from 'enzyme';
 import MainHeader from '../../src/components/MainHeader';
 
+configure({ adapter: new Adapter() });
 test('MainHeader 컴퍼넌트 렌더링 테스트', () => {
-  const component = renderer.create(
-    <MainHeader />,
-  );
-  let tree;
+  const component = shallow(<MainHeader />);
 
-  tree = component.toJSON();
-  expect(tree).toMatchInlineSnapshot(`
+  expect(component).toMatchInlineSnapshot(`
 <div
   className="component-mainheader-wrapper"
 >
