@@ -8,7 +8,7 @@ type InitialState = {
   items: Item[]
 }
 
-const initialState: InitialState = {
+export const initialState: InitialState = {
   loadingItems: true,
   failToLoadItems: false,
   items: [],
