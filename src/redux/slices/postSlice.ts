@@ -9,7 +9,7 @@ type InitialState = {
   posts: Post[]
 }
 
-const initialState: InitialState = {
+export const initialState: InitialState = {
   currentPost: null,
   loadingPosts: true,
   failToLoadPosts: false,
