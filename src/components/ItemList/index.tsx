@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useCallback, useState} from 'react';
 import { useDispatch } from 'react-redux';
 import { checkItem } from '../../redux/slices/itemSlice';
 import { Item as ItemInterface } from '../../types/object';
@@ -26,10 +26,10 @@ const Item = React.memo(({ item }: ItemProp) => {
 export const ItemCheckbox = React.memo(({ item, onCheck }: ItemCheckboxProp) => {
   const [isDone, setIsDone] = useState(item.isDone);
 
-  const onClick = () => {
+  const onClick = useCallback(() => {
     setIsDone((prev) => !prev);
     onCheck();
-  };
+  }, []);
 
   return (
     <button
