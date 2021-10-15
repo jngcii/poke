@@ -24,7 +24,7 @@ export const addPost = createAsyncThunk<void, Post>(
   'posts/addPostStatus',
   async (newPost) => repository.addPost(newPost),
 );
-export const removePost = createAsyncThunk<void, number>(
+export const removePost = createAsyncThunk<void, string>(
   'posts/removePostStatus',
   async (postId) => repository.removePost(postId),
 );

@@ -10,8 +10,8 @@ import repository from '../../../src/redux/api/repository';
 
 jest.mock('../../../src/redux/api/repository');
 
-const mockedItem1 = createItem(1, 1, 'first', false);
-const mockedItem2 = createItem(2, 1, 'second', false);
+const mockedItem1 = createItem('1', '1', 'first', false);
+const mockedItem2 = createItem('2', '1', 'second', false);
 
 describe('item slice reducer test', function () {
 

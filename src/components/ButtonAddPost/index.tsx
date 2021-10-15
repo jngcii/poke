@@ -12,9 +12,7 @@ export default React.memo(() => {
 
   const onAdd = () => {
     const newPost = createPost(
-      posts.length > 0
-        ? Math.max(...posts.map((it) => it.id)) + 1
-        : 1,
+      'abcdefgh',
       'New List',
     );
     dispatch(addPost(newPost));

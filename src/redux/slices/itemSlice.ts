@@ -18,7 +18,7 @@ export const getAllItem = createAsyncThunk(
   'items/getAllStatus',
   async () => repository.getAllItem(),
 );
-export const checkItem = createAsyncThunk<void, number>(
+export const checkItem = createAsyncThunk<void, string>(
   'items/checkItemStatus',
   async (itemId) => repository.checkItem(itemId),
 );
