@@ -6,7 +6,7 @@ type KeyFactory = {
   build: (before?: string, after?: string) => string,
   first: (pivot: string) => string,
   last: (pivot: string) => string,
-  compare: (before: string, after: string) => boolean
+  compare: (before: string, after: string) => number
 }
 
 function keyFactory(hashSize: number): KeyFactory {
@@ -61,10 +61,10 @@ function keyFactory(hashSize: number): KeyFactory {
     return getNextDoubleHash(prefixHash) + postfixHash;
   };
 
-  const compare = (before: string, after: string): boolean => {
+  const compare = (before: string, after: string): number => {
     const beforeInteger = convertToInteger(before);
     const afterInteger = convertToInteger(after);
-    return beforeInteger - afterInteger > 0;
+    return beforeInteger - afterInteger;
   };
 
   /**
@@ -202,4 +202,5 @@ function keyFactory(hashSize: number): KeyFactory {
   };
 }
 
+export const key8Factory = keyFactory(8);
 export default keyFactory;
