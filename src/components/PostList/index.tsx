@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDraggable } from 'muuri-react';
 import { selectPost } from '../../redux/slices/postSlice';
 import { RootState } from '../../redux/store';
-import { key8Factory } from '../../redux/utils/keyFactory';
 import { Post } from '../../types/object';
 import './style.scss';
 
@@ -14,16 +13,9 @@ import PostGrid from '../PostGrid';
 export default React.memo(() => {
   const { posts } = useSelector((state: RootState) => state.post);
 
-  const sortedPosts = useMemo(
-    () => (posts.length > 1
-      ? [...posts].sort((before: Post, after: Post) => key8Factory.compare(before.id, after.id))
-      : [...posts]),
-    [posts],
-  );
-
   return (
-    <PostGrid posts={posts}>
-      {sortedPosts.map((post) => (
+    <PostGrid>
+      {posts.map((post) => (
         <PostListItem key={post.id} post={post} />
       ))}
     </PostGrid>
@@ -48,7 +40,7 @@ const PostListItemTitle = React.memo(({ post }: PostProps) => {
 
   return (
     <div className="post-list-item-title" onClick={onClick}>
-      <strong>{post.title}</strong>
+      <strong>{post.id}</strong>
     </div>
   );
 });

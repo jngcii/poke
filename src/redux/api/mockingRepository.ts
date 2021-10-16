@@ -41,6 +41,13 @@ const mockingRepository = {
     resolve();
   }),
 
+  updatePost: (post: Post): Promise<void> => new Promise((resolve) => {
+    posts = posts.map((it) => (it.id === post.id ? post : it));
+    console.log('Post updated!');
+
+    resolve();
+  }),
+
   getAllItem: (): Promise<Item[]> => new Promise((resolve) => { resolve(items); }),
   checkItem: (itemId: string): Promise<void> => new Promise(((resolve, reject) => {
     const checkedItem = items.find((it) => it.id === itemId);

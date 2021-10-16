@@ -1,49 +1,74 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { MuuriComponent } from 'muuri-react';
+import { key8Factory } from '../../redux/utils/keyFactory';
+import { updatePostKey } from '../../redux/slices/postSlice';
 
-export default ({ posts, children }) => {
-  const originKeyList = useRef(posts.map((it) => it.id));
+export default React.memo(({ children }) => {
+  const { posts } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
+
+  const sortedPosts = useMemo(
+    () => (posts.length > 1
+      ? [...posts].sort((before, after) => key8Factory.compare(before.id, after.id))
+      : [...posts]),
+    [posts],
+  );
+
+  const currentPosition = useRef(0);
 
   const changeTargetKey = (item) => {
-    const key = item.getKey();
+    const post = item.getData();
+    const key = post.id;
 
-    const originIdx = originKeyList.current.indexOf(key);
-    // eslint-disable-next-line no-underscore-dangle
-    const rearrangedKeyList = item.getGrid()._items.map((it) => it._component.key);
-    const changedIdx = rearrangedKeyList.indexOf(key);
-    if (changedIdx === originIdx) {
-      console.log('nothing happened!');
-      return;
-    }
+    const position = item.getPosition().top;
 
-    originKeyList.current = rearrangedKeyList;
-    console.log(`originKeyList rearranged! : ${rearrangedKeyList}`);
+    if (position === currentPosition.current) { return; }
+
+    const margin = item.getMargin();
+    const height = item.getHeight() + margin.top + margin.bottom;
+    const changedIdx = position / height;
+
+    const target = sortedPosts[changedIdx];
 
     let before;
     let after;
 
-    if (changedIdx > 0) {
-      before = posts.find((post) => post.id === rearrangedKeyList[changedIdx - 1]).id;
-      if (changedIdx < posts.length - 1) {
-        after = posts.find((post) => post.id === rearrangedKeyList[changedIdx + 1]).id;
-      }
-    } else if (changedIdx < posts.length - 1) {
-      after = posts.find((post) => post.id === rearrangedKeyList[changedIdx + 1]).id;
+    const isBiggerThanTarget = key8Factory.compare(key, target.id) > 0;
+
+    // 아래 있던 것이 위로
+    if (isBiggerThanTarget) {
+      after = target.id;
+      if (changedIdx > 0) before = sortedPosts[changedIdx - 1].id;
+    // 위에 있던 것이 아래로
+    } else {
+      before = target.id;
+      if (changedIdx < sortedPosts.length - 1) after = sortedPosts[changedIdx + 1].id;
     }
 
-    console.log(`before : ${before}`);
-    console.log(`after : ${after}`);
+    const newKey = key8Factory.build(before, after);
+
+    const newItem = { ...post, id: newKey };
+    item.setData(newItem);
+    dispatch(updatePostKey({ oldKey: key, newKey }));
+  };
+
+  const recordCurrentPosition = (item) => {
+    currentPosition.current = item.getPosition().top;
   };
 
   return (
     <MuuriComponent
       {...girdProps}
       onDragEnd={changeTargetKey}
+      onDragStart={recordCurrentPosition}
+      propsToData={({ post }) => post}
+      sort="id:asc"
     >
       {children}
     </MuuriComponent>
   );
-};
+});
 
 const girdProps = {
   dragEnabled: true,
