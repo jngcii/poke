@@ -9,7 +9,7 @@ type KeyFactory = {
   compare: (before: string, after: string) => number
 }
 
-function keyFactory(hashSize: number): KeyFactory {
+function createKeyFactory(hashSize: number): KeyFactory {
   if (hashSize < 4) throw Error('hashSize must be at least 4.');
 
   const init = (): string => {
@@ -202,5 +202,5 @@ function keyFactory(hashSize: number): KeyFactory {
   };
 }
 
-export const key8Factory = keyFactory(8);
-export default keyFactory;
+export const key8Factory = createKeyFactory(8);
+export default createKeyFactory;
