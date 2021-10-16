@@ -2,28 +2,28 @@ import { createItem, createPost } from '../utils/objectCreator';
 import { Item, Post } from '../../types/object';
 
 let posts = [
-  createPost(1, 'first'),
-  createPost(2, 'second'),
-  createPost(3, 'third'),
-  createPost(4, 'fourth'),
-  createPost(5, 'fifth'),
+  createPost('EEEEEEEE', 'third'),
+  createPost('IIIIIIII', 'fifth'),
+  createPost('CCCCCCCC', 'second'),
+  createPost('AAAAAAAA', 'first'),
+  createPost('GGGGGGGG', 'fourth'),
 ];
 
 let items = [
-  createItem(1, 1, 'work', true),
-  createItem(2, 1, 'fitness', false),
-  createItem(3, 1, 'read book', false),
+  createItem('B0000000', 'AAAAAAAA', 'first - 2', false),
+  createItem('A0000000', 'AAAAAAAA', 'first - 1', true),
+  createItem('C0000000', 'AAAAAAAA', 'first - 3', false),
 
-  createItem(4, 2, 'work', true),
-  createItem(5, 2, 'shopping', true),
-  createItem(6, 2, 'fitness', true),
-  createItem(7, 2, 'read book', false),
+  createItem('E0000000', 'CCCCCCCC', 'second - 2', true),
+  createItem('G0000000', 'CCCCCCCC', 'second - 4', false),
+  createItem('F0000000', 'CCCCCCCC', 'second - 3', true),
+  createItem('D0000000', 'CCCCCCCC', 'second - 1', true),
 
-  createItem(8, 5, 'egg', false),
-  createItem(9, 5, 'milk', false),
-  createItem(10, 5, 'yogurt', false),
-  createItem(11, 5, 'cereal', false),
-  createItem(12, 5, 'salmon', false),
+  createItem('L0000000', 'IIIIIIII', 'fifth - 5', false),
+  createItem('I0000000', 'IIIIIIII', 'fifth - 2', false),
+  createItem('H0000000', 'IIIIIIII', 'fifth - 1', false),
+  createItem('J0000000', 'IIIIIIII', 'fifth - 3', false),
+  createItem('K0000000', 'IIIIIIII', 'fifth - 4', false),
 ];
 
 const mockingRepository = {
@@ -34,15 +34,22 @@ const mockingRepository = {
 
     resolve();
   }),
-  removePost: (postId: number): Promise<void> => new Promise((resolve) => {
+  removePost: (postId: string): Promise<void> => new Promise((resolve) => {
     posts = posts.filter((it) => it.id !== postId);
     console.log('Post removed!');
 
     resolve();
   }),
 
+  updatePost: (post: Post): Promise<void> => new Promise((resolve) => {
+    posts = posts.map((it) => (it.id === post.id ? post : it));
+    console.log('Post updated!');
+
+    resolve();
+  }),
+
   getAllItem: (): Promise<Item[]> => new Promise((resolve) => { resolve(items); }),
-  checkItem: (itemId: number): Promise<void> => new Promise(((resolve, reject) => {
+  checkItem: (itemId: string): Promise<void> => new Promise(((resolve, reject) => {
     const checkedItem = items.find((it) => it.id === itemId);
 
     if (!checkedItem) {

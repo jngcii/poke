@@ -4,6 +4,7 @@ import { addPost } from '../../redux/slices/postSlice';
 import './style.scss';
 import { RootState } from '../../redux/store';
 import { createPost } from '../../redux/utils/objectCreator';
+import { key8Factory } from '../../redux/utils/keyFactory';
 
 export default React.memo(() => {
   const { posts } = useSelector((state: RootState) => state.post);
@@ -11,10 +12,14 @@ export default React.memo(() => {
   const dispatch = useDispatch();
 
   const onAdd = () => {
+    const sortedKeyList = [...posts.map((it) => it.id)].sort(key8Factory.compare);
+
+    const newKey = sortedKeyList.length > 0
+      ? key8Factory.first(sortedKeyList[0])
+      : key8Factory.init();
+
     const newPost = createPost(
-      posts.length > 0
-        ? Math.max(...posts.map((it) => it.id)) + 1
-        : 1,
+      newKey,
       'New List',
     );
     dispatch(addPost(newPost));

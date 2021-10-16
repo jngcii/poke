@@ -7,7 +7,7 @@ import { ItemCheckbox } from '../../src/components/ItemList';
 configure({ adapter: new Adapter() });
 
 describe('ItemCheckbox 렌더링 및 인터렉션 테스트', () => {
-  let mockedItem = createItem(1, 1, 'sample', false);
+  let mockedItem = createItem('1', '1', 'sample', false);
   let mockedOnCheck = jest.fn(() => { mockedItem = {...mockedItem, isDone: !mockedItem.isDone }});
 
   test('스냅샷', () => {

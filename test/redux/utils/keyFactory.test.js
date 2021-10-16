@@ -156,9 +156,9 @@ describe('새로운 key 생성 테스트', () => {
   });
 
   test('compare 테스트', () => {
-    expect(keyFactory.compare('aaaaaaab', 'aaaaaaaa')).toBe(true)
-    expect(keyFactory.compare('aaaaaaaa', 'aaaaaaab')).toBe(false)
-    expect(keyFactory.compare('aaaaaaaa', 'aaaaaaaa')).toBe(false)
+    expect(keyFactory.compare('aaaaaaab', 'aaaaaaaa') > 0).toBe(true)
+    expect(keyFactory.compare('aaaaaaaa', 'aaaaaaab') > 0).toBe(false)
+    expect(keyFactory.compare('aaaaaaaa', 'aaaaaaaa') > 0).toBe(false)
   })
 
 });

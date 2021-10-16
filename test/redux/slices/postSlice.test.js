@@ -12,8 +12,8 @@ import repository from '../../../src/redux/api/repository';
 
 jest.mock('../../../src/redux/api/repository');
 
-const mockedPost1 = createPost(1, 'first');
-const mockedPost2 = createPost(2, 'second');
+const mockedPost1 = createPost('1', 'first');
+const mockedPost2 = createPost('2', 'second');
 
 describe('post slice reducer test', function () {
 
