@@ -28,7 +28,8 @@ export const removePost = createAsyncThunk<void, string>(
   'posts/removePostStatus',
   async (postId) => repository.removePost(postId),
 );
-type PostKeyUpdateType = { oldKey: string, newKey: string }
+
+type PostUpdateType = { id: string, post: Post }
 
 export const postSlice = createSlice({
   name: 'posts',
@@ -40,11 +41,12 @@ export const postSlice = createSlice({
       state.currentPost = !!state.currentPost && state.currentPost.id === post.id ? null : post;
     },
 
-    updatePostKey: (state: InitialState, action: PayloadAction<PostKeyUpdateType>) => {
-      const { oldKey, newKey } = action.payload;
+    updatePost: (state: InitialState, action: PayloadAction<PostUpdateType>) => {
+      const { id, post } = action.payload;
 
-      const post = state.posts.find((it) => it.id === oldKey);
-      post.id = newKey;
+      state.posts = state.posts.map((it) => (
+        it.id === id ? post : it
+      ));
 
       repository.updatePost(post);
     },
@@ -83,6 +85,6 @@ export const postSlice = createSlice({
   },
 });
 
-export const { selectPost, updatePostKey } = postSlice.actions;
+export const { selectPost, updatePost } = postSlice.actions;
 
 export default postSlice.reducer;

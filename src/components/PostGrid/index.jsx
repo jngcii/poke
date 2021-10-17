@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MuuriComponent } from 'muuri-react';
 import { key8Factory } from '../../redux/utils/keyFactory';
-import { updatePostKey } from '../../redux/slices/postSlice';
+import { updatePost } from '../../redux/slices/postSlice';
 
 export default React.memo(({ children }) => {
   const { posts } = useSelector((state) => state.post);
@@ -48,9 +48,9 @@ export default React.memo(({ children }) => {
 
     const newKey = key8Factory.build(before, after);
 
-    const newItem = { ...post, id: newKey };
-    item.setData(newItem);
-    dispatch(updatePostKey({ oldKey: key, newKey }));
+    const newPost = { ...post, id: newKey };
+    item.setData(newPost);
+    dispatch(updatePost({ id: key, post: newPost }));
   };
 
   const recordCurrentPosition = (item) => {
