@@ -1,25 +1,29 @@
 import React, { useMemo, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { MuuriComponent } from 'muuri-react';
+import { useDispatch, useSelector } from 'react-redux';
 import { key8Factory } from '../../redux/utils/keyFactory';
-import { updatePost } from '../../redux/slices/postSlice';
+import { updateItem } from '../../redux/slices/itemSlice';
 
 export default React.memo(({ children }) => {
-  const { posts } = useSelector((state) => state.post);
+  const { item: { items }, post: { currentPost } } = useSelector((state) => state);
   const dispatch = useDispatch();
 
-  const sortedPosts = useMemo(
-    () => (posts.length > 1
-      ? [...posts].sort((before, after) => key8Factory.compare(before.id, after.id))
-      : [...posts]),
-    [posts],
+  const sortedItems = useMemo(
+    () => {
+      const currentItems = !currentPost ? [] : items.filter((it) => it.postId === currentPost.id);
+
+      return (currentItems.length > 1
+        ? currentItems.sort((before, after) => key8Factory.compare(before.id, after.id))
+        : currentItems
+      );
+    }, [items, currentPost],
   );
 
   const currentPosition = useRef(0);
 
   const changeTargetKey = (item) => {
-    const post = item.getData();
-    const key = post.id;
+    const postItem = item.getData();
+    const key = postItem.id;
 
     const position = item.getPosition().top;
 
@@ -29,7 +33,7 @@ export default React.memo(({ children }) => {
     const height = item.getHeight() + margin.top + margin.bottom;
     const changedIdx = position / height;
 
-    const target = sortedPosts[changedIdx];
+    const target = sortedItems[changedIdx];
 
     let before;
     let after;
@@ -39,18 +43,18 @@ export default React.memo(({ children }) => {
     // 아래 있던 것이 위로
     if (isBiggerThanTarget) {
       after = target.id;
-      if (changedIdx > 0) before = sortedPosts[changedIdx - 1].id;
-    // 위에 있던 것이 아래로
+      if (changedIdx > 0) before = sortedItems[changedIdx - 1].id;
+      // 위에 있던 것이 아래로
     } else {
       before = target.id;
-      if (changedIdx < sortedPosts.length - 1) after = sortedPosts[changedIdx + 1].id;
+      if (changedIdx < sortedItems.length - 1) after = sortedItems[changedIdx + 1].id;
     }
 
     const newKey = key8Factory.build(before, after);
 
-    const newPost = { ...post, id: newKey };
-    item.setData(newPost);
-    dispatch(updatePost({ id: key, post: newPost }));
+    const newItem = { ...postItem, id: newKey };
+    item.setData(newItem);
+    dispatch(updateItem({ id: key, item: newItem }));
   };
 
   const recordCurrentPosition = (item) => {
@@ -62,7 +66,7 @@ export default React.memo(({ children }) => {
       {...girdProps}
       onDragEnd={changeTargetKey}
       onDragStart={recordCurrentPosition}
-      propsToData={({ post }) => post}
+      propsToData={({ item }) => item}
       sort="id:asc"
     >
       {children}
@@ -80,12 +84,12 @@ const girdProps = {
   dragAxis: 'y',
 
   // ClassNames
-  containerClass: 'post-list-container',
-  itemClass: 'post-list-item-outer',
-  itemVisibleClass: 'post-list-item-outer-shown',
-  itemHiddenClass: 'post-list-item-outer-hidden',
-  itemPositioningClass: 'post-list-item-outer-positioning',
-  itemDraggingClass: 'post-list-item-outer-dragging',
-  itemReleasingClass: 'post-list-item-outer-releasing',
-  itemPlaceholderClass: 'post-list-item-outer-placeholder',
+  containerClass: 'item-list-container',
+  itemClass: 'item-outer',
+  itemVisibleClass: 'item-outer-shown',
+  itemHiddenClass: 'item-outer-hidden',
+  itemPositioningClass: 'item-outer-positioning',
+  itemDraggingClass: 'item-outer-dragging',
+  itemReleasingClass: 'item-outer-releasing',
+  itemPlaceholderClass: 'item-outer-placeholder',
 };
