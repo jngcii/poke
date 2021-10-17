@@ -66,6 +66,12 @@ const mockingRepository = {
     });
     resolve();
   })),
+  updateItem: (item: Item): Promise<void> => new Promise((resolve) => {
+    items = items.map((it) => (it.id === item.id ? item : it));
+    console.log('Item updated!');
+
+    resolve();
+  }),
 };
 
 export default mockingRepository;

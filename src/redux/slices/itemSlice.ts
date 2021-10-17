@@ -23,10 +23,21 @@ export const checkItem = createAsyncThunk<void, string>(
   async (itemId) => repository.checkItem(itemId),
 );
 
+type ItemUpdateType = { id: string, item: Item };
+
 export const itemSlice = createSlice({
   name: 'items',
   initialState,
   reducers: {
+    updateItem: (state: InitialState, action: PayloadAction<ItemUpdateType>) => {
+      const { id, item } = action.payload;
+
+      state.items = state.items.map((it) => (
+        it.id === id ? item : it
+      ));
+
+      repository.updateItem(item);
+    },
   },
 
   extraReducers: {
@@ -62,6 +73,6 @@ export const itemSlice = createSlice({
   },
 });
 
-const { reducer } = itemSlice;
+export const { updateItem } = itemSlice.actions;
 
-export default reducer;
+export default itemSlice.reducer;
