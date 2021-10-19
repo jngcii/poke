@@ -10,7 +10,7 @@ export default React.memo(({ children }) => {
 
   const sortedPosts = useMemo(
     () => (posts.length > 1
-      ? [...posts].sort((before, after) => key8Factory.compare(before.id, after.id))
+      ? [...posts].sort((before, after) => key8Factory.compare(before.order, after.order))
       : [...posts]),
     [posts],
   );
@@ -19,7 +19,7 @@ export default React.memo(({ children }) => {
 
   const changeTargetKey = (item) => {
     const post = item.getData();
-    const key = post.id;
+    const key = post.order;
 
     const position = item.getPosition().top;
 
@@ -34,23 +34,23 @@ export default React.memo(({ children }) => {
     let before;
     let after;
 
-    const isBiggerThanTarget = key8Factory.compare(key, target.id) > 0;
+    const isBiggerThanTarget = key8Factory.compare(key, target.order) > 0;
 
     // 아래 있던 것이 위로
     if (isBiggerThanTarget) {
-      after = target.id;
-      if (changedIdx > 0) before = sortedPosts[changedIdx - 1].id;
+      after = target.order;
+      if (changedIdx > 0) before = sortedPosts[changedIdx - 1].order;
     // 위에 있던 것이 아래로
     } else {
-      before = target.id;
-      if (changedIdx < sortedPosts.length - 1) after = sortedPosts[changedIdx + 1].id;
+      before = target.order;
+      if (changedIdx < sortedPosts.length - 1) after = sortedPosts[changedIdx + 1].order;
     }
 
     const newKey = key8Factory.build(before, after);
 
-    const newPost = { ...post, id: newKey };
+    const newPost = { ...post, order: newKey };
     item.setData(newPost);
-    dispatch(updatePost({ id: key, post: newPost }));
+    dispatch(updatePost({ id: post.id, post: newPost }));
   };
 
   const recordCurrentPosition = (item) => {
@@ -63,7 +63,7 @@ export default React.memo(({ children }) => {
       onDragEnd={changeTargetKey}
       onDragStart={recordCurrentPosition}
       propsToData={({ post }) => post}
-      sort="id:asc"
+      sort="order:asc"
     >
       {children}
     </MuuriComponent>

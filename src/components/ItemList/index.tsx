@@ -3,8 +3,11 @@ import { useDispatch } from 'react-redux';
 import { useDraggable } from 'muuri-react';
 import { checkItem } from '../../redux/slices/itemSlice';
 import { Item as ItemInterface } from '../../types/object';
-import ItemGrid from '../ItemGrid';
 import './style.scss';
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import ItemGrid from '../ItemGrid';
 
 export default React.memo(({ items }: ItemsProps) => {
   const children = items.map((item) => <Item key={item.id} item={item} />);

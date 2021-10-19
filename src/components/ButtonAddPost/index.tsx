@@ -12,7 +12,7 @@ export default React.memo(() => {
   const dispatch = useDispatch();
 
   const onAdd = () => {
-    const sortedKeyList = [...posts.map((it) => it.id)].sort(key8Factory.compare);
+    const sortedKeyList = [...posts.map((it) => it.order)].sort(key8Factory.compare);
 
     const newKey = sortedKeyList.length > 0
       ? key8Factory.first(sortedKeyList[0])
