@@ -2,28 +2,28 @@ import { createItem, createPost } from '../utils/objectCreator';
 import { Item, Post } from '../../types/object';
 
 let posts = [
-  createPost('EEEEEEEE', 'third'),
-  createPost('IIIIIIII', 'fifth'),
-  createPost('CCCCCCCC', 'second'),
-  createPost('AAAAAAAA', 'first'),
-  createPost('GGGGGGGG', 'fourth'),
+  createPost('EEEEEEEE', 'third', '3'),
+  createPost('IIIIIIII', 'fifth', '5'),
+  createPost('CCCCCCCC', 'second', '2'),
+  createPost('AAAAAAAA', 'first', '1'),
+  createPost('GGGGGGGG', 'fourth', '4'),
 ];
 
 let items = [
-  createItem('B0000000', 'AAAAAAAA', 'first - 2', false),
-  createItem('A0000000', 'AAAAAAAA', 'first - 1', true),
-  createItem('C0000000', 'AAAAAAAA', 'first - 3', false),
+  createItem('B0000000', '1', 'first - 2', false),
+  createItem('A0000000', '1', 'first - 1', true),
+  createItem('C0000000', '1', 'first - 3', false),
 
-  createItem('E0000000', 'CCCCCCCC', 'second - 2', true),
-  createItem('G0000000', 'CCCCCCCC', 'second - 4', false),
-  createItem('F0000000', 'CCCCCCCC', 'second - 3', true),
-  createItem('D0000000', 'CCCCCCCC', 'second - 1', true),
+  createItem('E0000000', '2', 'second - 2', true),
+  createItem('G0000000', '2', 'second - 4', false),
+  createItem('F0000000', '2', 'second - 3', true),
+  createItem('D0000000', '2', 'second - 1', true),
 
-  createItem('L0000000', 'IIIIIIII', 'fifth - 5', false),
-  createItem('I0000000', 'IIIIIIII', 'fifth - 2', false),
-  createItem('H0000000', 'IIIIIIII', 'fifth - 1', false),
-  createItem('J0000000', 'IIIIIIII', 'fifth - 3', false),
-  createItem('K0000000', 'IIIIIIII', 'fifth - 4', false),
+  createItem('L0000000', '5', 'fifth - 5', false),
+  createItem('I0000000', '5', 'fifth - 2', false),
+  createItem('H0000000', '5', 'fifth - 1', false),
+  createItem('J0000000', '5', 'fifth - 3', false),
+  createItem('K0000000', '5', 'fifth - 4', false),
 ];
 
 const mockingRepository = {

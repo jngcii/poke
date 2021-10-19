@@ -13,7 +13,7 @@ export default React.memo(({ children }) => {
       const currentItems = !currentPost ? [] : items.filter((it) => it.postId === currentPost.id);
 
       return (currentItems.length > 1
-        ? currentItems.sort((before, after) => key8Factory.compare(before.id, after.id))
+        ? currentItems.sort((before, after) => key8Factory.compare(before.order, after.order))
         : currentItems
       );
     }, [items, currentPost],
@@ -23,7 +23,7 @@ export default React.memo(({ children }) => {
 
   const changeTargetKey = (item) => {
     const postItem = item.getData();
-    const key = postItem.id;
+    const key = postItem.order;
 
     const position = item.getPosition().top;
 
@@ -38,23 +38,23 @@ export default React.memo(({ children }) => {
     let before;
     let after;
 
-    const isBiggerThanTarget = key8Factory.compare(key, target.id) > 0;
+    const isBiggerThanTarget = key8Factory.compare(key, target.order) > 0;
 
     // 아래 있던 것이 위로
     if (isBiggerThanTarget) {
-      after = target.id;
-      if (changedIdx > 0) before = sortedItems[changedIdx - 1].id;
+      after = target.order;
+      if (changedIdx > 0) before = sortedItems[changedIdx - 1].order;
       // 위에 있던 것이 아래로
     } else {
-      before = target.id;
-      if (changedIdx < sortedItems.length - 1) after = sortedItems[changedIdx + 1].id;
+      before = target.order;
+      if (changedIdx < sortedItems.length - 1) after = sortedItems[changedIdx + 1].order;
     }
 
     const newKey = key8Factory.build(before, after);
 
-    const newItem = { ...postItem, id: newKey };
+    const newItem = { ...postItem, order: newKey };
     item.setData(newItem);
-    dispatch(updateItem({ id: key, item: newItem }));
+    dispatch(updateItem({ id: postItem.id, item: newItem }));
   };
 
   const recordCurrentPosition = (item) => {
@@ -67,7 +67,7 @@ export default React.memo(({ children }) => {
       onDragEnd={changeTargetKey}
       onDragStart={recordCurrentPosition}
       propsToData={({ item }) => item}
-      sort="id:asc"
+      sort="order:asc"
     >
       {children}
     </MuuriComponent>
