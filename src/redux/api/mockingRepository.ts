@@ -72,6 +72,18 @@ const mockingRepository = {
 
     resolve();
   }),
+  addItem: (item: Item): Promise<void> => new Promise((resolve) => {
+    items = [...items, item];
+    console.log('Item added!');
+
+    resolve();
+  }),
+  removeItem: (itemId: string): Promise<void> => new Promise((resolve) => {
+    items = items.filter((it) => it.id !== itemId);
+    console.log('Item removed!');
+
+    resolve();
+  }),
 };
 
 export default mockingRepository;

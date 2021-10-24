@@ -1,7 +1,8 @@
 import reducer, {
+  addItem,
   checkItem,
   getAllItem,
-  initialState,
+  initialState, removeItem,
 } from '../../../src/redux/slices/itemSlice';
 import configureMockStore from 'redux-mock-store';
 import { createItem } from '../../../src/redux/utils/objectCreator';
@@ -60,5 +61,30 @@ describe('item slice reducer test', function () {
         expect(state.items[0].isDone).toBe(false);
       });
   });
+
+  test('dispatching add item reducer test', () => {
+    let state = {
+      ...initialState,
+      items: [mockedItem1, mockedItem2]
+    };
+
+    const mockedItem3 = createItem('3', '1', 'third', false);
+
+    state = reducer(state, addItem(mockedItem3));
+    expect(state.items.length).toBe(3);
+    expect(state.items[2]).toEqual(mockedItem3);
+  });
+
+  test('dispatching remove item reducer test', () => {
+    let state = {
+      ...initialState,
+      items: [mockedItem1, mockedItem2]
+    };
+
+    const targetId = mockedItem1.id;
+
+    state = reducer(state, removeItem(targetId));
+    expect(state.items.length).toBe(1);
+  })
 
 });

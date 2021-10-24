@@ -38,6 +38,20 @@ export const itemSlice = createSlice({
 
       repository.updateItem(item);
     },
+    addItem: (state: InitialState, action: PayloadAction<Item>) => {
+      const item = action.payload;
+
+      state.items.push(item);
+
+      repository.addItem(item);
+    },
+    removeItem: (state: InitialState, action: PayloadAction<string>) => {
+      const itemId = action.payload;
+
+      state.items = state.items.filter((it) => it.id !== itemId);
+
+      repository.removeItem(itemId);
+    },
   },
 
   extraReducers: {
@@ -73,6 +87,6 @@ export const itemSlice = createSlice({
   },
 });
 
-export const { updateItem } = itemSlice.actions;
+export const { updateItem, addItem, removeItem } = itemSlice.actions;
 
 export default itemSlice.reducer;
