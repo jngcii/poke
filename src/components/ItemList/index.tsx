@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import { useDispatch } from 'react-redux';
 import { useDraggable } from 'muuri-react';
-import { checkItem } from '../../redux/slices/itemSlice';
+import {checkItem, updateItem} from '../../redux/slices/itemSlice';
 import { Item as ItemInterface } from '../../types/object';
 import './style.scss';
 
@@ -48,7 +48,34 @@ export const ItemCheckbox = React.memo(({ item, onCheck }: ItemCheckboxProp) => 
   );
 });
 
-const ItemContent = React.memo(({ item }: ItemProp) => <div className="component-item-content">{item.content}</div>);
+const ItemContent = React.memo(({ item }: ItemProp) => {
+  const [text, setText] = useState(item.content);
+  const dispatch = useDispatch();
+
+  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+
+    console.log(text);
+
+    e.preventDefault();
+  }, [text]);
+
+  const onBlur = useCallback(() => {
+    const newItem = { ...item, content: text };
+    console.log(newItem);
+    dispatch(updateItem({ id: item.id, item: newItem }));
+  }, [item, text]);
+
+  return (
+    <div className="component-item-content">
+      <input
+        value={text}
+        onChange={onChange}
+        onBlur={onBlur}
+      />
+    </div>
+  );
+});
 
 const ItemDragger = React.memo(() => {
   const draggable = useDraggable();
