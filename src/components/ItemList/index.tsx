@@ -70,6 +70,12 @@ const ItemContent = React.memo(({ item }: ItemProp) => {
   const onKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+
+      if (!text || !text.trim()) {
+        dispatch(removeItem(item.id));
+        return;
+      }
+
       const sortedOrders = items.map((it) => it.order).sort((a, b) => key8Factory.compare(a, b));
       const itemIndex = sortedOrders.indexOf(item.order);
       const nextOrder = itemIndex === items.length - 1 ? undefined : sortedOrders[itemIndex + 1];

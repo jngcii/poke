@@ -40,7 +40,7 @@ const PostListItemTitle = React.memo(({ post }: PostProps) => {
 
   return (
     <div className="post-list-item-title" onClick={onClick}>
-      <strong>{post.order}</strong>
+      <strong>{post.title}</strong>
     </div>
   );
 });
