@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MuuriComponent } from 'muuri-react';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import { updatePost } from '../../redux/slices/postSlice';
+import gridItemReplacer from '../../redux/utils/gridItemReplacer';
 
 export default React.memo(({ children }) => {
   const { posts } = useSelector((state) => state.post);
@@ -18,39 +19,11 @@ export default React.memo(({ children }) => {
   const currentPosition = useRef(0);
 
   const changeTargetKey = (item) => {
-    const post = item.getData();
-    const key = post.order;
-
-    const position = item.getPosition().top;
-
-    if (position === currentPosition.current) { return; }
-
-    const margin = item.getMargin();
-    const height = item.getHeight() + margin.top + margin.bottom;
-    const changedIdx = position / height;
-
-    const target = sortedPosts[changedIdx];
-
-    let before;
-    let after;
-
-    const isBiggerThanTarget = key8Factory.compare(key, target.order) > 0;
-
-    // 아래 있던 것이 위로
-    if (isBiggerThanTarget) {
-      after = target.order;
-      if (changedIdx > 0) before = sortedPosts[changedIdx - 1].order;
-    // 위에 있던 것이 아래로
-    } else {
-      before = target.order;
-      if (changedIdx < sortedPosts.length - 1) after = sortedPosts[changedIdx + 1].order;
-    }
-
-    const newKey = key8Factory.build(before, after);
-
-    const newPost = { ...post, order: newKey };
-    item.setData(newPost);
-    dispatch(updatePost({ id: post.id, post: newPost }));
+    // item : MuuriComponent의 onDragEnd 첫번째 파라미터로 주어지는 객체
+    const replacedPost = gridItemReplacer.replace(item, currentPosition, sortedPosts);
+    if (!replacedPost) return;
+    item.setData(replacedPost);
+    dispatch(updatePost({ id: replacedPost.id, post: replacedPost }));
   };
 
   const recordCurrentPosition = (item) => {
