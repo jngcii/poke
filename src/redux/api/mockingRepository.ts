@@ -1,5 +1,6 @@
 import { createItem, createPost } from '../utils/objectCreator';
 import { Item, Post } from '../../types/object';
+import { key8Factory } from '../utils/keyFactory';
 
 let posts = [
   createPost('EEEEEEEE', 'third', '3'),
@@ -43,7 +44,13 @@ const mockingRepository = {
 
   updatePost: (post: Post): Promise<void> => new Promise((resolve) => {
     posts = posts.map((it) => (it.id === post.id ? post : it));
+
     console.log('Post updated!');
+    posts.sort(
+      (before, after) => key8Factory.compare(before.order, after.order),
+    ).forEach(
+      (p: Post) => { console.debug(`${p.title} - ${p.order}`); },
+    );
 
     resolve();
   }),
@@ -68,7 +75,15 @@ const mockingRepository = {
   })),
   updateItem: (item: Item): Promise<void> => new Promise((resolve) => {
     items = items.map((it) => (it.id === item.id ? item : it));
+
     console.log('Item updated!');
+    items.filter(
+      (i: Item) => i.postId === item.postId,
+    ).sort(
+      (before, after) => key8Factory.compare(before.order, after.order),
+    ).forEach(
+      (i: Item) => { console.debug(`${i.content} - ${i.order}`); },
+    );
 
     resolve();
   }),
