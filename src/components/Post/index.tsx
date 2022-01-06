@@ -44,8 +44,7 @@ const PostHeaderTitle = React.memo(({ post }: PostProps) => {
   const [title, setTitle] = useState(post.title);
   const inputRef = useRef(null);
   const items = useSelector((state: RootState) => state.item)
-    .items.map((it) => it.order)
-    .sort((a, b) => key8Factory.compare(a, b));
+    .items.sort((a, b) => key8Factory.compare(a.order, b.order));
   const dispatch = useDispatch();
 
   // 리렌더링 될 때 title가 비어있다 : 새로 생긴 Post 컴퍼넌트다
