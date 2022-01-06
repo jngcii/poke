@@ -70,7 +70,6 @@ const PostHeaderTitle = React.memo(({ post }: PostProps) => {
         const lastItem = items[items.length - 1];
         const newOrder = key8Factory.build(lastItem.order, undefined);
         newItem = createItem(newOrder, post.id, '', false);
-        console.log(newItem);
       }
       dispatch(addItem(newItem));
 
