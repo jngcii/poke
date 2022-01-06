@@ -92,7 +92,7 @@ const ItemContent = React.memo(({ item }: ItemProp) => {
       // (이때 새로생긴 ItemContent는 text가 없기 때문에 input focusing된다.)
       dispatch(addItem(newItem));
     }
-  }, [items]);
+  }, [items, text]);
 
   const onChangeText = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);

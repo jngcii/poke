@@ -20,7 +20,7 @@ export default React.memo(() => {
 
     const newPost = createPost(
       newKey,
-      'New List',
+      '',
     );
     dispatch(addPost(newPost));
   };
