@@ -64,18 +64,25 @@ const ItemContent = React.memo(({ item }: ItemProp) => {
   // 리렌더링 될 때 text가 비어있다 : 새로 생긴 ItemContent 컴퍼넌트다
   // 그때는 input에 포커싱이 된다.
   useEffect(() => {
+    console.log('wow');
     if (!text || !text.trim()) {
+      console.log('asdf');
       inputRef.current.focus();
     }
   }, []);
 
   const onEnter = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+    console.log('onEnter');
+    console.log(text);
     if (e.key === 'Enter') {
       e.preventDefault();
 
       // enter 시 현재 ItemContent의 text가 비어있으면 취소와 같은 동작을 한다.
       // = 현재 ItemContent 제거!
+      console.log('cc');
+      console.log(text);
       if (!text || !text.trim()) {
+        console.log('dd');
         dispatch(removeItem(item.id));
         return;
       }
@@ -92,10 +99,13 @@ const ItemContent = React.memo(({ item }: ItemProp) => {
       // (이때 새로생긴 ItemContent는 text가 없기 때문에 input focusing된다.)
       dispatch(addItem(newItem));
     }
-  }, [items]);
+  }, [items, text]);
 
   const onChangeText = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
+
+    console.log('onChange');
+    console.log(text);
 
     e.preventDefault();
   }, [text]);
