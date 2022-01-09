@@ -1,12 +1,12 @@
 import React, {
-  ChangeEvent, KeyboardEvent, useCallback, useEffect, useRef, useState,
+  ChangeEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDraggable } from 'muuri-react';
 import {
   addItem, checkItem, removeItem, updateItem,
 } from '../../redux/slices/itemSlice';
-import { Item as ItemInterface } from '../../types/object';
+import { Item as ItemInterface, Post } from '../../types/object';
 import './style.scss';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -14,13 +14,44 @@ import './style.scss';
 import ItemGrid from '../ItemGrid';
 import { RootState } from '../../redux/store';
 import { key8Factory } from '../../redux/utils/keyFactory';
-import { createItem } from '../../redux/utils/objectCreator';
+import { createInitialItem, createItem } from '../../redux/utils/objectCreator';
 
-export default React.memo(({ items }: ItemsProps) => {
+export default React.memo(({ post, items }: ItemsProps) => {
   const children = items.map((item) => <Item key={item.id} item={item} />);
+  const dispatch = useDispatch();
 
-  return <ItemGrid>{children}</ItemGrid>;
+  const sortedItems = useMemo(() => (
+    items.length > 1
+      ? items.sort((before, after) => key8Factory.compare(before.order, after.order))
+      : items
+  ), [items, post]);
+
+  useEffect(() => {
+    if (!!post.title.trim() && items.length === 0) {
+      addEmptyItem();
+    }
+  }, [post.id]);
+
+  const addEmptyItem = useCallback(() => {
+    let newItem;
+    if (sortedItems.length === 0) {
+      newItem = createInitialItem(post.id);
+    } else {
+      const lastItem = sortedItems[sortedItems.length - 1];
+      const newOrder = key8Factory.build(lastItem.order, undefined);
+      newItem = createItem(newOrder, post.id, '', false);
+    }
+    dispatch(addItem(newItem));
+  }, [post.id]);
+
+  return (
+    sortedItems.length > 0
+      ? <ItemGrid>{children}</ItemGrid>
+      : <EmptyContainer onClick={addEmptyItem} />
+  );
 });
+
+const EmptyContainer = React.memo(({ onClick }: EmptyItemProp) => <div className="item-empty-container" onClick={onClick} />);
 
 const Item = React.memo(({ item }: ItemProp) => {
   const dispatch = useDispatch();
@@ -31,7 +62,7 @@ const Item = React.memo(({ item }: ItemProp) => {
       <div className="item-inner">
         <ItemCheckbox item={item} onCheck={onCheck} />
         <ItemContent item={item} />
-        <ItemDragger />
+        {!!item.content.trim() && <ItemDragger />}
       </div>
     </div>
   );
@@ -146,6 +177,7 @@ const ItemDragger = React.memo(() => {
   );
 });
 
-type ItemsProps = { items: ItemInterface[] }
+type ItemsProps = { post: Post, items: ItemInterface[] }
+type EmptyItemProp = { onClick: () => void }
 type ItemProp = { item: ItemInterface }
 type ItemCheckboxProp = { item: ItemInterface, onCheck: () => void }

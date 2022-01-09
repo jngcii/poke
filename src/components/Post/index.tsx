@@ -28,7 +28,10 @@ export default React.memo(() => {
       </PostHeader>
 
       <PostContent>
-        <ItemList items={items.filter((it) => it.postId === currentPost.id)} />
+        <ItemList
+          post={currentPost}
+          items={items.filter((it) => it.postId === currentPost.id)}
+        />
       </PostContent>
     </div>
   ) : (
@@ -44,8 +47,13 @@ const PostHeaderTitle = React.memo(({ post }: PostProps) => {
   const [title, setTitle] = useState(post.title);
   const inputRef = useRef(null);
   const { items } = useSelector((state: RootState) => state.item);
-  const sortedItems = [...items].sort((a, b) => key8Factory.compare(a.order, b.order));
   const dispatch = useDispatch();
+
+  const sortedItems = useMemo(() => (
+    items.length > 1
+      ? [...items].sort((before, after) => key8Factory.compare(before.order, after.order))
+      : [...items]
+  ), [post, items]);
 
   // 리렌더링 될 때 title가 비어있다 : 새로 생긴 Post 컴퍼넌트다
   // 새로생겼을 때를 제외하고는 title이 비어있는 경우 없음!
