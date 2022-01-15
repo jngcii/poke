@@ -33,7 +33,7 @@ const config = {
       {
         test: /\.s[ac]ss$/i,
         include: path.resolve(__dirname, 'src'),
-        exclude: /node_modeuls/,
+        exclude: /node_modules/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
     ],
