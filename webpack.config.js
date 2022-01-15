@@ -42,7 +42,7 @@ const config = {
     extensions: ['', '.ts', '.tsx', '.js', '.jsx'],
   },
   plugins: [
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({ filename: '[name].css' }),
     new HtmlWebpackPlugin({
       title: 'poke',
       template: './public/index.html',
