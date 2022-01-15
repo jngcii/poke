@@ -1,5 +1,5 @@
 import React, {
-  ChangeEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState,
+  KeyboardEvent, useCallback, useEffect, useMemo, useState,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDraggable } from 'muuri-react';
@@ -15,6 +15,7 @@ import ItemGrid from '../ItemGrid';
 import { RootState } from '../../redux/store';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import { createInitialItem, createItem } from '../../redux/utils/objectCreator';
+import useInput, { InputHook } from '../../hooks/InputHook';
 
 export default React.memo(({ post, items }: ItemsProps) => {
   const children = items.map((item) => <Item key={item.id} item={item} />);
@@ -51,9 +52,10 @@ export default React.memo(({ post, items }: ItemsProps) => {
   );
 });
 
-const EmptyContainer = React.memo(({ onClick }: EmptyItemProp) => <div className="item-empty-container" onClick={onClick} />);
+const EmptyContainer = React.memo(({ onClick }: EmptyItemProps) => <div className="item-empty-container" onClick={onClick} />);
 
-const Item = React.memo(({ item }: ItemProp) => {
+const Item = React.memo(({ item }: ItemProps) => {
+  const inputHook = useInput(item.content);
   const dispatch = useDispatch();
   const onCheck = () => dispatch(checkItem(item.id));
 
@@ -61,14 +63,14 @@ const Item = React.memo(({ item }: ItemProp) => {
     <div className="item-outer">
       <div className="item-inner">
         <ItemCheckbox item={item} onCheck={onCheck} />
-        <ItemContent item={item} />
-        {!!item.content.trim() && <ItemDragger />}
+        <ItemContent item={item} inputHook={inputHook} />
+        {!!inputHook.value.trim() && <ItemDragger />}
       </div>
     </div>
   );
 });
 
-export const ItemCheckbox = React.memo(({ item, onCheck }: ItemCheckboxProp) => {
+export const ItemCheckbox = React.memo(({ item, onCheck }: ItemCheckboxProps) => {
   const [isDone, setIsDone] = useState(item.isDone);
 
   const onClick = useCallback(() => {
@@ -86,17 +88,16 @@ export const ItemCheckbox = React.memo(({ item, onCheck }: ItemCheckboxProp) => 
   );
 });
 
-const ItemContent = React.memo(({ item }: ItemProp) => {
-  const [text, setText] = useState(item.content);
-  const inputRef = useRef(null);
+const ItemContent = React.memo(({ item, inputHook }: ItemContentProps) => {
+  const { value, ref, onChangeValue } = inputHook;
   const { items } = useSelector((state: RootState) => state.item);
   const dispatch = useDispatch();
 
   // 리렌더링 될 때 text가 비어있다 : 새로 생긴 ItemContent 컴퍼넌트다
   // 그때는 input에 포커싱이 된다.
   useEffect(() => {
-    if (!text || !text.trim()) {
-      inputRef.current.focus();
+    if (!value || !value.trim()) {
+      ref.current.focus();
     }
   }, []);
 
@@ -106,7 +107,7 @@ const ItemContent = React.memo(({ item }: ItemProp) => {
 
       // enter 시 현재 ItemContent의 text가 비어있으면 취소와 같은 동작을 한다.
       // = 현재 ItemContent 제거!
-      if (!text || !text.trim()) {
+      if (!value || !value.trim()) {
         dispatch(removeItem(item.id));
         return;
       }
@@ -123,31 +124,25 @@ const ItemContent = React.memo(({ item }: ItemProp) => {
       // (이때 새로생긴 ItemContent는 text가 없기 때문에 input focusing된다.)
       dispatch(addItem(newItem));
     }
-  }, [items, text]);
-
-  const onChangeText = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
-
-    e.preventDefault();
-  }, [text]);
+  }, [items, value]);
 
   // Blur 당시 Item이 빈문자가 아닐 때에만 Item Update Dispatch
   const onBlur = useCallback(() => {
-    if (!text || !text.trim()) {
+    if (!value || !value.trim()) {
       dispatch(removeItem(item.id));
     } else {
-      const newItem = { ...item, content: text };
+      const newItem = { ...item, content: value };
       dispatch(updateItem({ id: item.id, item: newItem }));
     }
-  }, [item, text]);
+  }, [item, value]);
 
   return (
     <div className="component-item-content">
       <input
-        ref={inputRef}
-        value={text}
+        ref={ref}
+        value={value}
         onKeyDown={onEnter}
-        onChange={onChangeText}
+        onChange={onChangeValue}
         onBlur={onBlur}
       />
     </div>
@@ -178,6 +173,7 @@ const ItemDragger = React.memo(() => {
 });
 
 type ItemsProps = { post: Post, items: ItemInterface[] }
-type EmptyItemProp = { onClick: () => void }
-type ItemProp = { item: ItemInterface }
-type ItemCheckboxProp = { item: ItemInterface, onCheck: () => void }
+type EmptyItemProps = { onClick: () => void }
+type ItemProps = { item: ItemInterface }
+type ItemCheckboxProps = { item: ItemInterface, onCheck: () => void }
+type ItemContentProps = { item: ItemInterface, inputHook: InputHook }
