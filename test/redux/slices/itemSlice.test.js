@@ -54,11 +54,11 @@ describe('item slice reducer test', function () {
       .then(() => {
         expect(store.getActions[0].type).toEqual(checkItem.pending.type);
         state = reducer(state, store.getActions()[0]);
-        expect(state.items[0].isDone).toBe(true);
+        expect(state.items[0].done).toBe(true);
 
         expect(store.getActions[2].type).toEqual(checkItem.rejected.type);
         state = reducer(state, store.getActions()[2]);
-        expect(state.items[0].isDone).toBe(false);
+        expect(state.items[0].done).toBe(false);
       }).catch(e => console.error(e));;
   });
 

@@ -8,7 +8,7 @@ configure({ adapter: new Adapter() });
 
 describe('ItemCheckbox 렌더링 및 인터렉션 테스트', () => {
   let mockedItem = createItem('1', '1', 'sample', false);
-  let mockedOnCheck = jest.fn(() => { mockedItem = {...mockedItem, isDone: !mockedItem.isDone }});
+  let mockedOnCheck = jest.fn(() => { mockedItem = {...mockedItem, done: !mockedItem.done }});
 
   test('스냅샷', () => {
     const component = shallow(<ItemCheckbox item={mockedItem} onCheck={mockedOnCheck}/>);
@@ -26,7 +26,7 @@ describe('ItemCheckbox 렌더링 및 인터렉션 테스트', () => {
   test('클릭 전 상태 테스트', () => {
     const component = shallow(<ItemCheckbox item={mockedItem} onCheck={mockedOnCheck}/>);
 
-    expect(mockedItem.isDone).toBe(false);
+    expect(mockedItem.done).toBe(false);
     expect(component.find('button').hasClass('done')).toBe(false);
 
   });
@@ -36,7 +36,7 @@ describe('ItemCheckbox 렌더링 및 인터렉션 테스트', () => {
 
     component.find('button').simulate('click');
     expect(mockedOnCheck.mock.calls.length).toBe(1);
-    expect(mockedItem.isDone).toBe(true);
+    expect(mockedItem.done).toBe(true);
     expect(component.find('button').hasClass('done')).toBe(true);
   });
 });

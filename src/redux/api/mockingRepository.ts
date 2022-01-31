@@ -67,7 +67,7 @@ const mockingRepository = {
     console.log('Item Checked!');
     items = items.map((item) => {
       if (item.id === itemId) {
-        return { ...item, isDone: !item.isDone };
+        return { ...item, done: !item.done };
       }
       return item;
     });
