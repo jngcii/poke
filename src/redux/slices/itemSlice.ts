@@ -74,7 +74,7 @@ export const itemSlice = createSlice({
       if (!checkedItem) {
         console.error(`Cannot find Item(id=${arg})`);
       } else {
-        checkedItem.isDone = !checkedItem.isDone;
+        checkedItem.done = !checkedItem.done;
       }
     },
     [checkItem.rejected.type]: (state: InitialState, { meta: { arg } }) => {
@@ -82,7 +82,7 @@ export const itemSlice = createSlice({
       alert('Failed To Check Item!');
 
       const checkedItem = state.items.find((it) => it.id === arg);
-      if (checkedItem !== undefined) checkedItem.isDone = !checkedItem.isDone;
+      if (checkedItem !== undefined) checkedItem.done = !checkedItem.done;
     },
   },
 });

@@ -60,7 +60,7 @@ describe('post slice reducer test', function () {
         state = reducer(state, store.getActions()[2]);
         expect(state.loadingPosts).toBe(false);
         expect(state.failToLoadPosts).toBe(true);
-      });
+      }).catch(e => console.error(e));
   });
 
   test('test dispatching addPost thunk trigger actions', () => {
@@ -79,7 +79,7 @@ describe('post slice reducer test', function () {
         state = reducer(state, store.getActions()[2]);
         expect(state.currentPost).toBeNull();
         expect(state.posts).toEqual(initialState.posts);
-      });
+      }).catch(e => console.error(e));;
   });
 
   test('test dispatching removePost thunk trigger actions', () => {
@@ -96,7 +96,7 @@ describe('post slice reducer test', function () {
         state = reducer(state, store.getActions()[0]);
         expect(state.currentPost).toBeNull();
         expect(state.posts).toEqual([]);
-      });
+      }).catch(e => console.error(e));;
   });
 
 });

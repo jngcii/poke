@@ -71,16 +71,16 @@ const Item = React.memo(({ item }: ItemProps) => {
 });
 
 export const ItemCheckbox = React.memo(({ item, onCheck }: ItemCheckboxProps) => {
-  const [isDone, setIsDone] = useState(item.isDone);
+  const [done, setDone] = useState(item.done);
 
   const onClick = useCallback(() => {
-    setIsDone((prev) => !prev);
+    setDone((prev) => !prev);
     onCheck();
   }, []);
 
   return (
     <button
-      className={isDone ? 'component-item-checkbox done' : 'component-item-checkbox'}
+      className={done ? 'component-item-checkbox done' : 'component-item-checkbox'}
       type="button"
       aria-label="Check"
       onClick={onClick}
