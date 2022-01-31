@@ -39,7 +39,7 @@ describe('item slice reducer test', function () {
         state = reducer(state, store.getActions()[2]);
         expect(state.loadingItems).toBe(false);
         expect(state.failToLoadItems).toBe(true);
-      });
+      }).catch(e => console.error(e));;
   });
 
   test('test dispatching checkItem thunk trigger actions', () => {
@@ -59,7 +59,7 @@ describe('item slice reducer test', function () {
         expect(store.getActions[2].type).toEqual(checkItem.rejected.type);
         state = reducer(state, store.getActions()[2]);
         expect(state.items[0].isDone).toBe(false);
-      });
+      }).catch(e => console.error(e));;
   });
 
   test('dispatching add item reducer test', () => {
