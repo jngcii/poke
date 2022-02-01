@@ -15,7 +15,7 @@ export const initialState: InitialState = {
 };
 
 export const getAllItem = createAsyncThunk(
-  'items/getAllStatus',
+  'items/getAllItem',
   async () => repository.getAllItem(),
 );
 export const checkItem = createAsyncThunk<void, string>(

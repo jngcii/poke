@@ -7,7 +7,7 @@ type InitialState = {
 
 export const initialState: InitialState = {
   isLoggedIn: false,
-  isMemoryOpen: false,
+  isMemoryOpen: true,
 };
 
 export const defaultSlice = createSlice({
