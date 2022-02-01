@@ -4,11 +4,8 @@ import { useDraggable } from 'muuri-react';
 import { selectPost } from '../../redux/slices/postSlice';
 import { RootState } from '../../redux/store';
 import { Post } from '../../types/object';
-import './style.scss';
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import PostGrid from '../PostGrid';
+import './style.scss';
 
 export default React.memo(() => {
   const { posts } = useSelector((state: RootState) => state.post);

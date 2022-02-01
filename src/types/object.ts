@@ -3,8 +3,8 @@ export interface Post {
   userId: string,
   order: string,
   title: string,
-  created: Date,
-  updated: Date,
+  created: number,
+  updated: number,
   active: boolean
 }
 
@@ -15,8 +15,8 @@ export interface Item {
   content: string,
   done: boolean,
   memoryId: string | null,
-  added: Date,
-  updated: Date
+  added: number,
+  updated: number
 }
 
 export interface Memory {
@@ -26,8 +26,8 @@ export interface Memory {
   order: string,
   fixed: boolean,
   parentId: string | null,
-  created: Date,
-  updated: Date,
+  created: number,
+  updated: number,
   level: number
 }
 
@@ -35,7 +35,7 @@ export interface User {
   id: string,
   nickname: string,
   type: 'normal' | 'business',
-  created: Date,
-  updated: Date,
+  created: number,
+  updated: number,
   currentPostId: string | null,
 }

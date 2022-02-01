@@ -2,7 +2,8 @@ import reducer, {
   addItem,
   checkItem,
   getAllItem,
-  initialState, removeItem,
+  initialState,
+  removeItem,
 } from '../../../src/redux/slices/itemSlice';
 import configureMockStore from 'redux-mock-store';
 import { createItem } from '../../../src/redux/utils/objectCreator';
@@ -39,7 +40,7 @@ describe('item slice reducer test', function () {
         state = reducer(state, store.getActions()[2]);
         expect(state.loadingItems).toBe(false);
         expect(state.failToLoadItems).toBe(true);
-      }).catch(e => console.error(e));;
+      }).catch(e => console.error(e));
   });
 
   test('test dispatching checkItem thunk trigger actions', () => {
@@ -59,7 +60,7 @@ describe('item slice reducer test', function () {
         expect(store.getActions[2].type).toEqual(checkItem.rejected.type);
         state = reducer(state, store.getActions()[2]);
         expect(state.items[0].done).toBe(false);
-      }).catch(e => console.error(e));;
+      }).catch(e => console.error(e));
   });
 
   test('dispatching add item reducer test', () => {

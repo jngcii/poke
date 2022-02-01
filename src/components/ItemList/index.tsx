@@ -7,15 +7,12 @@ import {
   addItem, checkItem, removeItem, updateItem,
 } from '../../redux/slices/itemSlice';
 import { Item as ItemInterface, Post } from '../../types/object';
-import './style.scss';
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import ItemGrid from '../ItemGrid';
 import { RootState } from '../../redux/store';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import { createInitialItem, createItem } from '../../redux/utils/objectCreator';
 import useInput, { InputHook } from '../../hooks/InputHook';
+import './style.scss';
 
 export default React.memo(({ post, items }: ItemsProps) => {
   const children = items.map((item) => <Item key={item.id} item={item} />);

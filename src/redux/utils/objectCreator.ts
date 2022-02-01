@@ -1,5 +1,5 @@
 import { nanoid } from '@reduxjs/toolkit';
-import { Item, Post } from '../../types/object';
+import { Item, Memory, Post } from '../../types/object';
 import { key8Factory } from './keyFactory';
 
 export function createPost(order: string, title: string, id?: string): Post {
@@ -8,8 +8,8 @@ export function createPost(order: string, title: string, id?: string): Post {
     userId: 'tmp',
     order,
     title,
-    created: new Date(),
-    updated: new Date(),
+    created: Date.now(),
+    updated: Date.now(),
     active: true,
   };
 }
@@ -22,8 +22,28 @@ export function createItem(order: string, postId: string, content: string, done:
     content,
     done,
     memoryId: null,
-    added: new Date(),
-    updated: new Date(),
+    added: Date.now(),
+    updated: Date.now(),
+  };
+}
+
+export function createMemory(
+  order: string,
+  content: string,
+  fixed: boolean,
+  parentId: string | null,
+  level: number,
+): Memory {
+  return {
+    id: nanoid(),
+    userId: 'tmp',
+    content,
+    order,
+    fixed,
+    parentId,
+    created: Date.now(),
+    updated: Date.now(),
+    level,
   };
 }
 

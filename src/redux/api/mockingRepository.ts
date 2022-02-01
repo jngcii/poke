@@ -1,5 +1,5 @@
-import { createItem, createPost } from '../utils/objectCreator';
-import { Item, Post } from '../../types/object';
+import { createItem, createMemory, createPost } from '../utils/objectCreator';
+import { Item, Memory, Post } from '../../types/object';
 import { key8Factory } from '../utils/keyFactory';
 
 let posts = [
@@ -25,6 +25,14 @@ let items = [
   createItem('H0000000', '5', 'fifth - 1', false),
   createItem('J0000000', '5', 'fifth - 3', false),
   createItem('K0000000', '5', 'fifth - 4', false),
+];
+
+let memories = [
+  createMemory('A0000000', 'memory-1', true, null, 0),
+  createMemory('B0000000', 'memory-2', true, null, 0),
+  createMemory('C0000000', 'memory-3', true, null, 0),
+  createMemory('D0000000', 'memory-4', true, null, 0),
+  createMemory('E0000000', 'memory-5', true, null, 0),
 ];
 
 const mockingRepository = {
@@ -96,6 +104,20 @@ const mockingRepository = {
   removeItem: (itemId: string): Promise<void> => new Promise((resolve) => {
     items = items.filter((it) => it.id !== itemId);
     console.log('Item removed!');
+
+    resolve();
+  }),
+
+  getAllMemory: (): Promise<Memory[]> => new Promise((resolve) => { resolve(memories); }),
+  updateMemory: (memory: Memory): Promise<void> => new Promise((resolve) => {
+    memories = memories.map((it) => (it.id === memory.id ? memory : it));
+
+    console.log('Item updated!');
+    memories.sort(
+      (before, after) => key8Factory.compare(before.order, after.order),
+    ).forEach(
+      (i: Memory) => { console.debug(`${i.content} - ${i.order}`); },
+    );
 
     resolve();
   }),
