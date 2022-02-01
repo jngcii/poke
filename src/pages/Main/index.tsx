@@ -3,10 +3,7 @@ import { useDispatch } from 'react-redux';
 import { getAllPost } from '../../redux/slices/postSlice';
 import { getAllItem } from '../../redux/slices/itemSlice';
 import MainHeader from '../../components/MainHeader';
-import PostList from '../../components/PostList';
-import ButtonAddPost from '../../components/ButtonAddPost';
-import Post from '../../components/Post';
-import './style.scss';
+import SectionHome from '../../components/SectionHome';
 
 export default React.memo(() => {
   const dispatch = useDispatch();
@@ -18,19 +15,8 @@ export default React.memo(() => {
 
   return (
     <div>
-      <header className="screen-main-header">
-        <MainHeader />
-      </header>
-
-      <section className="screen-main-section">
-        <div className="screen-main-column-list">
-          <ButtonAddPost />
-          <PostList />
-        </div>
-        <div className="screen-main-column-detail">
-          <Post />
-        </div>
-      </section>
+      <MainHeader />
+      <SectionHome />
     </div>
   );
 });

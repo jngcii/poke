@@ -2,8 +2,8 @@ import React from 'react';
 import './style.scss';
 
 export default React.memo(() => (
-  <div className="component-mainheader-wrapper">
+  <header className="component-main-header-wrapper">
     <h1>POKE</h1>
     <h4>checklist for everyone</h4>
-  </div>
+  </header>
 ));
