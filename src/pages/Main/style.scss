@@ -1,0 +1,16 @@
+.page-main-wrapper {
+  display: flex;
+}
+
+.page-main-left {
+  flex: 1;
+}
+
+.page-main-right {
+  width: 0;
+  transition: 0.2s;
+}
+
+.page-main-right-open {
+  width: 350px;
+}
