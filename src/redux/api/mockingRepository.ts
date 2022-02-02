@@ -109,10 +109,16 @@ const mockingRepository = {
   }),
 
   getAllMemory: (): Promise<Memory[]> => new Promise((resolve) => { resolve(memories); }),
+  addMemory: (memory: Memory): Promise<void> => new Promise((resolve) => {
+    memories = [...memories, memory];
+    console.log('Memory added!');
+
+    resolve();
+  }),
   updateMemory: (memory: Memory): Promise<void> => new Promise((resolve) => {
     memories = memories.map((it) => (it.id === memory.id ? memory : it));
 
-    console.log('Item updated!');
+    console.log('Memory updated!');
     memories.sort(
       (before, after) => key8Factory.compare(before.order, after.order),
     ).forEach(

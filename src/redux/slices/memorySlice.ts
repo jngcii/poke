@@ -34,6 +34,13 @@ export const memorySlice = createSlice({
 
       repository.updateMemory(memory);
     },
+    addMemory: (state: InitialState, action: PayloadAction<Memory>) => {
+      const memory = action.payload;
+
+      state.memories.push(memory);
+
+      repository.addMemory(memory);
+    },
   },
   extraReducers: {
     [getAllMemory.pending.type]: (state: InitialState) => {
@@ -52,6 +59,6 @@ export const memorySlice = createSlice({
   },
 });
 
-export const { updateMemory } = memorySlice.actions;
+export const { updateMemory, addMemory } = memorySlice.actions;
 
 export default memorySlice.reducer;
