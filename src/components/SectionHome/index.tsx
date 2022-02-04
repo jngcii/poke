@@ -1,5 +1,5 @@
 import React from 'react';
-import ButtonAddPost from '../ButtonAddPost';
+import ButtonPostAdd from '../ButtonPostAdd';
 import PostList from '../PostList';
 import Post from '../Post';
 import './style.scss';
@@ -7,7 +7,7 @@ import './style.scss';
 export default React.memo(() => (
   <section className="screen-home-section">
     <div className="screen-home-column-list">
-      <ButtonAddPost />
+      <ButtonPostAdd />
       <PostList />
     </div>
 

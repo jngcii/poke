@@ -47,6 +47,20 @@ export function createMemory(
   };
 }
 
+export function createRootMemory(): Memory {
+  return {
+    id: '0',
+    userId: 'tmp',
+    content: 'Home',
+    order: '00000000',
+    fixed: true,
+    parentId: null,
+    created: Date.now(),
+    updated: Date.now(),
+    level: 0,
+  };
+}
+
 export function createInitialItem(postId: string): Item {
   return createItem(key8Factory.build(), postId, '', false);
 }

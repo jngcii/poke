@@ -10,7 +10,7 @@ export default React.memo(({ post }: PostProps) => {
   const onRemove = () => dispatch(removePost(post.id));
 
   return (
-    <button className="component-button-remove-post" type="button" onClick={onRemove}>
+    <button className="component-button-post-remove" type="button" onClick={onRemove}>
       TRASH
     </button>
   );

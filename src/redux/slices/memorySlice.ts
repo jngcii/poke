@@ -1,17 +1,20 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createRootMemory } from '../utils/objectCreator';
 import { Memory } from '../../types/object';
 import repository from '../api/repository';
 
 type InitialState = {
   loadingMemories: boolean,
   failToLoadMemories: boolean,
-  memories: Memory[]
+  memories: Memory[],
+  currentMemoryId: string,
 };
 
 export const initialState: InitialState = {
   loadingMemories: true,
   failToLoadMemories: false,
   memories: [],
+  currentMemoryId: '0',
 };
 
 export const getAllMemory = createAsyncThunk(
@@ -41,6 +44,9 @@ export const memorySlice = createSlice({
 
       repository.addMemory(memory);
     },
+    setCurrentMemoryId: (state: InitialState, action: PayloadAction<string>) => {
+      state.currentMemoryId = action.payload;
+    },
   },
   extraReducers: {
     [getAllMemory.pending.type]: (state: InitialState) => {
@@ -59,6 +65,6 @@ export const memorySlice = createSlice({
   },
 });
 
-export const { updateMemory, addMemory } = memorySlice.actions;
+export const { updateMemory, addMemory, setCurrentMemoryId } = memorySlice.actions;
 
 export default memorySlice.reducer;

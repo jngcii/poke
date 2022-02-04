@@ -1,6 +1,11 @@
 .component-memory-list-container {
     position: relative;
     transition: height 0.1s;
+    margin-top: 45px;
+}
+
+.component-memory-empty-list {
+    margin-top: 45px;
 }
 
 .component-memory-item-outer {
