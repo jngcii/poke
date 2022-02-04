@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ItemList from '../ItemList';
 import { Item, Post } from '../../types/object';
 import { RootState } from '../../redux/store';
-import ButtonRemovePost from '../ButtonRemovePost';
+import ButtonPostRemove from '../ButtonPostRemove';
 import './style.scss';
 import { updatePost } from '../../redux/slices/postSlice';
 import { createInitialItem, createItem } from '../../redux/utils/objectCreator';
@@ -24,7 +24,7 @@ export default React.memo(() => {
       <PostHeader>
         <PostHeaderTitle post={currentPost} />
         <PostHeaderOptions>
-          <ButtonRemovePost post={currentPost} />
+          <ButtonPostRemove post={currentPost} />
         </PostHeaderOptions>
       </PostHeader>
 

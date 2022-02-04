@@ -1,4 +1,6 @@
-import { createItem, createMemory, createPost } from '../utils/objectCreator';
+import {
+  createItem, createMemory, createPost, createRootMemory,
+} from '../utils/objectCreator';
 import { Item, Memory, Post } from '../../types/object';
 import { key8Factory } from '../utils/keyFactory';
 
@@ -28,11 +30,12 @@ let items = [
 ];
 
 let memories = [
-  createMemory('A0000000', 'memory-1', true, null, 0),
-  createMemory('B0000000', 'memory-2', true, null, 0),
-  createMemory('C0000000', 'memory-3', true, null, 0),
-  createMemory('D0000000', 'memory-4', true, null, 0),
-  createMemory('E0000000', 'memory-5', true, null, 0),
+  createRootMemory(),
+  createMemory('A0000000', 'memory-1', true, '0', 1),
+  createMemory('B0000000', 'memory-2', true, '0', 1),
+  createMemory('C0000000', 'memory-3', true, '0', 1),
+  createMemory('D0000000', 'memory-4', true, '0', 1),
+  createMemory('E0000000', 'memory-5', true, '0', 1),
 ];
 
 const mockingRepository = {
@@ -109,10 +112,16 @@ const mockingRepository = {
   }),
 
   getAllMemory: (): Promise<Memory[]> => new Promise((resolve) => { resolve(memories); }),
+  addMemory: (memory: Memory): Promise<void> => new Promise((resolve) => {
+    memories = [...memories, memory];
+    console.log('Memory added!');
+
+    resolve();
+  }),
   updateMemory: (memory: Memory): Promise<void> => new Promise((resolve) => {
     memories = memories.map((it) => (it.id === memory.id ? memory : it));
 
-    console.log('Item updated!');
+    console.log('Memory updated!');
     memories.sort(
       (before, after) => key8Factory.compare(before.order, after.order),
     ).forEach(

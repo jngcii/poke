@@ -1,10 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPost } from '../../redux/slices/postSlice';
-import './style.scss';
 import { RootState } from '../../redux/store';
 import { createPost } from '../../redux/utils/objectCreator';
 import { key8Factory } from '../../redux/utils/keyFactory';
+import './style.scss';
 
 export default React.memo(() => {
   const { posts } = useSelector((state: RootState) => state.post);
@@ -26,8 +26,8 @@ export default React.memo(() => {
   };
 
   return (
-    <div className="component-button-add-post-wrapper">
-      <button className="component-button-add-post-btn" type="button" onClick={onAdd}>
+    <div className="component-button-post-add-wrapper">
+      <button className="component-button-post-add-btn" type="button" onClick={onAdd}>
         NEW
       </button>
     </div>

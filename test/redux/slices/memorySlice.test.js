@@ -1,6 +1,7 @@
 import reducer, {
+  addMemory,
   getAllMemory,
-  initialState,
+  initialState, setCurrentMemoryId,
 } from '../../../src/redux/slices/memorySlice';
 import configureMockStore from 'redux-mock-store';
 import { createMemory } from '../../../src/redux/utils/objectCreator';
@@ -10,7 +11,7 @@ import repository from '../../../src/redux/api/repository';
 jest.mock('../../../src/redux/api/repository');
 
 const mockedMemory1 = createMemory('1', 'first', true, null, 0);
-const mockedMemory2 = createMemory('1', 'second', true, null, 0);
+const mockedMemory2 = createMemory('2', 'second', true, null, 0);
 
 describe('memory slice reducer test', function () {
   
@@ -38,6 +39,33 @@ describe('memory slice reducer test', function () {
         expect(state.loadingMemories).toBe(false);
         expect(state.failToLoadMemories).toBe(true);
       }).catch(e => null);
+  });
+  
+  test('dispatching add memory reducer test', () => {
+    let state = {
+      ...initialState,
+      memories: [mockedMemory1, mockedMemory2]
+    };
+    
+    const mockedMemory3 = createMemory('3', 'third', true, null, 0);
+    
+    state = reducer(state, addMemory(mockedMemory3));
+    expect(state.memories.length).toBe(3);
+    expect(state.memories[2]).toEqual(mockedMemory3);
+  });
+  
+  test('dispatching set currentMemoryId', () => {
+    // given
+    let state = {
+      ...initialState,
+      currentMemoryId: '0',
+    };
+  
+    expect(state.currentMemoryId).toEqual('0');
+    // when
+    state = reducer(state, setCurrentMemoryId('1'));
+    // then
+    expect(state.currentMemoryId).toEqual('1');
   });
   
 });
