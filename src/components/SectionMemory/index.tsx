@@ -18,6 +18,15 @@ export default React.memo(() => {
     memory: { memories, currentMemoryId },
   } = useSelector((state: RootState) => state);
   const [editing, setEditing] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (isMemoryOpen) {
+      setTimeout(() => setVisible(true), 250);
+    } else {
+      setVisible(false);
+    }
+  }, [isMemoryOpen]);
 
   useEffect(() => {
     if (!isMemoryOpen) setEditing(false);
@@ -33,7 +42,7 @@ export default React.memo(() => {
     [memories, currentMemoryId],
   );
 
-  return isMemoryOpen ? (
+  return visible ? (
     <div className="component-memory-list-wrapper">
       <HeaderMemory editing={editing} setEditing={setEditing} />
 

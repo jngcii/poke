@@ -18,7 +18,6 @@ export default React.memo(() => {
     dispatch(getAllPost());
     dispatch(getAllItem());
     dispatch(getAllMemory());
-    dispatch(toggleMemory());
   }, []);
 
   return (

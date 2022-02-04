@@ -25,7 +25,7 @@ export default React.memo(({ editing }: EditingProps) => {
 
   const children = useMemo(() => currentMemories.map((memory) => (
     <MemoryItem key={memory.id} memory={memory} editing={editing} />
-  )), [currentMemories]);
+  )), [currentMemories, editing]);
 
   return currentMemories.length > 0 ? (
     <MemoryGrid>
