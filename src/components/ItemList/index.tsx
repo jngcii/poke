@@ -61,7 +61,7 @@ const Item = React.memo(({ item }: ItemProps) => {
       <div className="item-inner">
         <ItemCheckbox item={item} onCheck={onCheck} />
         <ItemContent item={item} inputHook={inputHook} />
-        {!!inputHook.value.trim() && <ItemDragger />}
+        <ItemDragger />
       </div>
     </div>
   );
