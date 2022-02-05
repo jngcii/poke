@@ -5,12 +5,15 @@ import React, {
 export type InputHook = {
   value: string,
   setValue: React.Dispatch<React.SetStateAction<string>>,
+  isFocused: boolean,
+  setIsFocused: React.Dispatch<React.SetStateAction<boolean>>,
   ref: React.MutableRefObject<any>,
   onChangeValue: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 const useInput = (initialValue = ''): InputHook => {
   const [value, setValue] = useState(initialValue);
+  const [isFocused, setIsFocused] = useState(false);
   const ref = useRef(null);
 
   const onChangeValue = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +23,7 @@ const useInput = (initialValue = ''): InputHook => {
   }, [value]);
 
   return {
-    value, setValue, ref, onChangeValue,
+    value, setValue, ref, onChangeValue, isFocused, setIsFocused,
   };
 };
 

@@ -57,12 +57,24 @@ const Item = React.memo(({ item }: ItemProps) => {
   const onCheck = () => dispatch(checkItem(item.id));
 
   return (
-    <div className="item-outer">
+    <div className={`item-outer ${inputHook.isFocused && 'recommending'}`}>
       <div className="item-inner">
         <ItemCheckbox item={item} onCheck={onCheck} />
         <ItemContent item={item} inputHook={inputHook} />
         <ItemDragger />
       </div>
+      {inputHook.isFocused && <ItemRecommendation item={item} />}
+    </div>
+  );
+});
+
+// todo : 개별 디렉터리로 리팩터링
+const ItemRecommendation = React.memo(({ item }: ItemProps) => {
+  const [recommendation, setRecommendation] = useState([]);
+
+  return (
+    <div className="component-item-recommendation-wrapper">
+      <div className="component-item-recommendation" />
     </div>
   );
 });
@@ -86,7 +98,9 @@ export const ItemCheckbox = React.memo(({ item, onCheck }: ItemCheckboxProps) =>
 });
 
 const ItemContent = React.memo(({ item, inputHook }: ItemContentProps) => {
-  const { value, ref, onChangeValue } = inputHook;
+  const {
+    value, ref, onChangeValue, setIsFocused,
+  } = inputHook;
   const { items } = useSelector((state: RootState) => state.item);
   const dispatch = useDispatch();
 
@@ -123,8 +137,13 @@ const ItemContent = React.memo(({ item, inputHook }: ItemContentProps) => {
     }
   }, [items, value]);
 
+  const onFocus = () => {
+    setIsFocused(true);
+  };
+
   // Blur 당시 Item이 빈문자가 아닐 때에만 Item Update Dispatch
   const onBlur = useCallback(() => {
+    setIsFocused(false);
     if (!value || !value.trim()) {
       dispatch(removeItem(item.id));
     } else {
@@ -140,6 +159,7 @@ const ItemContent = React.memo(({ item, inputHook }: ItemContentProps) => {
         value={value}
         onKeyDown={onEnter}
         onChange={onChangeValue}
+        onFocus={onFocus}
         onBlur={onBlur}
       />
     </div>
