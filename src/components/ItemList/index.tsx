@@ -8,6 +8,7 @@ import {
 } from '../../redux/slices/itemSlice';
 import { Item as ItemInterface, Post } from '../../types/object';
 import ItemGrid from '../ItemGrid';
+import ItemRecommendation from '../ItemRecommendation';
 import { RootState } from '../../redux/store';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import { createInitialItem, createItem } from '../../redux/utils/objectCreator';
@@ -52,29 +53,32 @@ export default React.memo(({ post, items }: ItemsProps) => {
 const EmptyContainer = React.memo(({ onClick }: EmptyItemProps) => <div className="item-empty-container" onClick={onClick} />);
 
 const Item = React.memo(({ item }: ItemProps) => {
+  const [recommending, setRecommending] = useState(false);
   const inputHook = useInput(item.content);
   const dispatch = useDispatch();
   const onCheck = () => dispatch(checkItem(item.id));
 
+  useEffect(() => {
+    setRecommending(inputHook.isFocused);
+  }, [inputHook.isFocused]);
+
+  const toggleRecommendation = (to = false) => {
+    setRecommending(to);
+  };
+
   return (
-    <div className={`item-outer ${inputHook.isFocused && 'recommending'}`}>
+    <div className={`item-outer ${recommending && 'recommending'}`}>
       <div className="item-inner">
         <ItemCheckbox item={item} onCheck={onCheck} />
         <ItemContent item={item} inputHook={inputHook} />
         <ItemDragger />
       </div>
-      {inputHook.isFocused && <ItemRecommendation item={item} />}
-    </div>
-  );
-});
-
-// todo : 개별 디렉터리로 리팩터링
-const ItemRecommendation = React.memo(({ item }: ItemProps) => {
-  const [recommendation, setRecommendation] = useState([]);
-
-  return (
-    <div className="component-item-recommendation-wrapper">
-      <div className="component-item-recommendation" />
+      {recommending && (
+      <ItemRecommendation
+        inputHook={inputHook}
+        toggleRecommendation={toggleRecommendation}
+      />
+      )}
     </div>
   );
 });
