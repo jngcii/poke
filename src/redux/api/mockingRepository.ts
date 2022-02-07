@@ -31,11 +31,14 @@ let items = [
 
 let memories = [
   createRootMemory(),
-  createMemory('A0000000', 'memory-1', true, '0', 1),
-  createMemory('B0000000', 'memory-2', true, '0', 1),
-  createMemory('C0000000', 'memory-3', true, '0', 1),
-  createMemory('D0000000', 'memory-4', true, '0', 1),
-  createMemory('E0000000', 'memory-5', true, '0', 1),
+  createMemory('A0000000', 'memory-1', true, '0', 1, '1'),
+  createMemory('B0000000', 'memory-2', true, '0', 1, '2'),
+  createMemory('C0000000', 'memory-3', true, '0', 1, '3'),
+  createMemory('D0000000', 'memory-4', true, '0', 1, '4'),
+  createMemory('E0000000', 'memory-5', true, '0', 1, '5'),
+  createMemory('A0000000', 'child-memory-1', true, '1', 2),
+  createMemory('B0000000', 'child-memory-2', true, '1', 2),
+  createMemory('A0000000', 'child-memory-3', true, '2', 2),
 ];
 
 const mockingRepository = {

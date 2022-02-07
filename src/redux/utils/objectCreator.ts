@@ -33,9 +33,10 @@ export function createMemory(
   fixed: boolean,
   parentId: string | null,
   level: number,
+  id: string | undefined = undefined,
 ): Memory {
   return {
-    id: nanoid(),
+    id: !id ? nanoid() : id,
     userId: 'tmp',
     content,
     order,

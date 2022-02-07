@@ -14,6 +14,10 @@
     margin: 5px 0;
 }
 
+.children-visible {
+    height: 200px;
+}
+
 .component-memory-item-inner {
     display: flex;
     border: 5px solid #000;
@@ -29,4 +33,8 @@
   width: 20px;
   height: 20px;
   background-color: #000;
+}
+
+.invisible-display {
+    display: none;
 }

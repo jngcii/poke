@@ -1,5 +1,5 @@
 import React, {
-  Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useState,
+  Dispatch, FormEvent, SetStateAction, useEffect, useState,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -15,7 +15,6 @@ import './style.scss';
 export default React.memo(() => {
   const {
     default: { isMemoryOpen },
-    memory: { memories, currentMemoryId },
   } = useSelector((state: RootState) => state);
   const [editing, setEditing] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -32,25 +31,11 @@ export default React.memo(() => {
     if (!isMemoryOpen) setEditing(false);
   }, [isMemoryOpen]);
 
-  const currentMemories = useMemo(
-    () => memories.filter((it) => it.parentId === currentMemoryId),
-    [memories, currentMemoryId],
-  );
-
-  const currentMemory = useMemo(
-    () => memories.find((it) => it.id === currentMemoryId),
-    [memories, currentMemoryId],
-  );
-
   return visible ? (
     <div className="component-memory-list-wrapper">
       <HeaderMemory editing={editing} setEditing={setEditing} />
 
       <MemoryList editing={editing} />
-
-      <hr />
-
-      <NewMemoryForm memories={currentMemories} currentMemory={currentMemory} />
     </div>
   ) : <div />;
 });
