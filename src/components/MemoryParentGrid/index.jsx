@@ -51,12 +51,12 @@ const gridProps = {
   dragAxis: 'y',
 
   // ClassNames
-  containerClass: 'component-memory-list-container',
-  itemClass: 'component-memory-item-outer',
-  itemVisibleClass: 'component-memory-item-outer-shown',
-  itemHiddenClass: 'component-memory-item-outer-hidden',
-  itemPositioningClass: 'component-memory-item-outer-positioning',
-  itemDraggingClass: 'component-memory-item-outer-dragging',
-  itemReleasingClass: 'component-memory-item-outer-releasing',
-  itemPlaceholderClass: 'component-memory-item-outer-placeholder',
+  containerClass: 'component-memory-parent-list-container',
+  itemClass: 'component-memory-parent-item-outer',
+  itemVisibleClass: 'component-memory-parent-item-outer-shown',
+  itemHiddenClass: 'component-memory-parent-item-outer-hidden',
+  itemPositioningClass: 'component-memory-parent-item-outer-positioning',
+  itemDraggingClass: 'component-memory-parent-item-outer-dragging',
+  itemReleasingClass: 'component-memory-parent-item-outer-releasing',
+  itemPlaceholderClass: 'component-memory-parent-item-outer-placeholder',
 };

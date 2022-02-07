@@ -7,8 +7,9 @@ import { useSelector } from 'react-redux';
 import { useDraggable, useRefresh } from 'muuri-react';
 import { RootState } from '../../redux/store';
 import { Memory } from '../../types/object';
-import MemoryGrid from '../MemoryGrid';
+import MemoryParentGrid from '../MemoryParentGrid';
 import './style.scss';
+import MemoryChildList from '../MemoryChildList';
 
 export default React.memo(({ editing }: EditingProps) => {
   const [currentMemories, setCurrentMemories] = useState([]);
@@ -22,24 +23,25 @@ export default React.memo(({ editing }: EditingProps) => {
   }, [memories]);
 
   const children = useMemo(() => currentMemories.map((memory) => (
-    <MemoryItem key={memory.id} memory={memory} editing={editing} />
+    <MemoryParentItem key={memory.id} memory={memory} editing={editing} />
   )), [currentMemories, editing]);
 
   return currentMemories.length > 0 ? (
-    <MemoryGrid>
+    <MemoryParentGrid>
       {children}
-    </MemoryGrid>
-  ) : <MemoryEmpty />;
+    </MemoryParentGrid>
+  ) : <MemoryParentEmpty />;
 });
 
-const MemoryEmpty = React.memo(() => (
-  <div className="component-memory-empty-list" />
+const MemoryParentEmpty = React.memo(() => (
+  <div className="component-memory-parent-empty-list" />
 ));
 
-const MemoryItem = React.memo(({ memory, editing }: MemoryProps) => {
+const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
   const {
     memory: { memories },
   } = useSelector((state: RootState) => state);
+  const [childrenVisible, setChildrenVisible] = useState(false);
   const [height, setHeight] = useState(undefined);
 
   const childrenContainerHeight = useMemo(() => {
@@ -57,14 +59,18 @@ const MemoryItem = React.memo(({ memory, editing }: MemoryProps) => {
     draggable(false);
   }, []);
 
+  useEffect(() => {
+    if (childrenVisible) {
+      setHeight(childrenContainerHeight);
+    } else {
+      setHeight(undefined);
+    }
+  }, [childrenVisible]);
+
   const toggleDraggable = (drag: boolean) => draggable(drag);
 
   const toggleChildrenVisible = () => {
-    if (height !== undefined) {
-      setHeight(undefined);
-    } else {
-      setHeight(childrenContainerHeight);
-    }
+    setChildrenVisible((prev) => !prev);
   };
 
   const outerStyle = {
@@ -77,9 +83,9 @@ const MemoryItem = React.memo(({ memory, editing }: MemoryProps) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     <div style={outerStyle}>
-      <div className="component-memory-item-inner">
-        <MemoryContent memory={memory} editing={editing} />
-        <MemoryDragger editing={editing} toggleDraggable={toggleDraggable} />
+      <div className="component-memory-parent-item-inner">
+        <MemoryParentContent memory={memory} editing={editing} />
+        <MemoryParentDragger editing={editing} toggleDraggable={toggleDraggable} />
         <button
           type="button"
           onClick={toggleChildrenVisible}
@@ -87,23 +93,28 @@ const MemoryItem = React.memo(({ memory, editing }: MemoryProps) => {
           TOGGLE
         </button>
       </div>
+      <MemoryChildList
+        parent={memory}
+        editing={editing}
+        visible={childrenVisible}
+      />
     </div>
   );
 });
 
-const MemoryContent = React.memo(({ memory, editing }: MemoryProps) => (
-  <div className="component-memory-item-content">
+const MemoryParentContent = React.memo(({ memory, editing }: MemoryProps) => (
+  <div className="component-memory-parent-item-content">
     <strong>{memory.content}</strong>
   </div>
 ));
 
-const MemoryDragger = React.memo(({ editing, toggleDraggable }: DraggerProps) => {
+const MemoryParentDragger = React.memo(({ editing, toggleDraggable }: DraggerProps) => {
   const enableDrag = () => toggleDraggable(true);
   const disableDrag = () => toggleDraggable(false);
 
   return (
     <div
-      className={`component-memory-item-dragger ${!editing && 'invisible-display'}`}
+      className={`component-memory-parent-item-dragger ${!editing && 'invisible-display'}`}
       onMouseOver={enableDrag}
       onMouseLeave={disableDrag}
     />

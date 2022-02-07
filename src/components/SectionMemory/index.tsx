@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import MemoryList from '../MemoryList';
+import MemoryParentList from '../MemoryParentList';
 import HeaderMemory from '../HeaderMemory';
 import useInput from '../../hooks/InputHook';
 import { addMemory } from '../../redux/slices/memorySlice';
@@ -35,11 +35,12 @@ export default React.memo(() => {
     <div className="component-memory-list-wrapper">
       <HeaderMemory editing={editing} setEditing={setEditing} />
 
-      <MemoryList editing={editing} />
+      <MemoryParentList editing={editing} />
     </div>
   ) : <div />;
 });
 
+// todo : 별도의 모듈로 분리
 const NewMemoryForm = React.memo(({ memories, currentMemory }: NewMemoryFormPropTypes) => {
   const dispatch = useDispatch();
   const inputHooks = useInput('');
