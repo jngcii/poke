@@ -6,12 +6,14 @@ type InitialState = {
   loadingMemories: boolean,
   failToLoadMemories: boolean,
   memories: Memory[],
+  selectable: boolean,
 };
 
 export const initialState: InitialState = {
   loadingMemories: true,
   failToLoadMemories: false,
   memories: [],
+  selectable: false,
 };
 
 export const getAllMemory = createAsyncThunk(
@@ -41,6 +43,9 @@ export const memorySlice = createSlice({
 
       repository.addMemory(memory);
     },
+    setSelectable: (state: InitialState, action: PayloadAction<boolean>) => {
+      state.selectable = action.payload;
+    },
   },
   extraReducers: {
     [getAllMemory.pending.type]: (state: InitialState) => {
@@ -59,6 +64,6 @@ export const memorySlice = createSlice({
   },
 });
 
-export const { updateMemory, addMemory } = memorySlice.actions;
+export const { updateMemory, addMemory, setSelectable } = memorySlice.actions;
 
 export default memorySlice.reducer;

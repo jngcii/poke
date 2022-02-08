@@ -13,6 +13,8 @@ import { key8Factory } from '../../redux/utils/keyFactory';
 import { createInitialItem, createItem } from '../../redux/utils/objectCreator';
 import useInput, { InputHook } from '../../hooks/InputHook';
 import './style.scss';
+import { setSelectable } from '../../redux/slices/memorySlice';
+import { toggleMemory } from '../../redux/slices/defaultSlice';
 
 export default React.memo(({ post, items }: ItemsProps) => {
   const children = items.map((item) => <Item key={item.id} item={item} />);
@@ -87,7 +89,10 @@ export const ItemCheckbox = React.memo(({ item, onCheck }: ItemCheckboxProps) =>
 
 const ItemContent = React.memo(({ item, inputHook }: ItemContentProps) => {
   const { value, ref, onChangeValue } = inputHook;
-  const { items } = useSelector((state: RootState) => state.item);
+  const {
+    item: { items },
+    memory: { selectable },
+  } = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
 
   // 리렌더링 될 때 text가 비어있다 : 새로 생긴 ItemContent 컴퍼넌트다
@@ -125,6 +130,7 @@ const ItemContent = React.memo(({ item, inputHook }: ItemContentProps) => {
 
   // Blur 당시 Item이 빈문자가 아닐 때에만 Item Update Dispatch
   const onBlur = useCallback(() => {
+    dispatch(setSelectable(false));
     if (!value || !value.trim()) {
       dispatch(removeItem(item.id));
     } else {
@@ -132,6 +138,11 @@ const ItemContent = React.memo(({ item, inputHook }: ItemContentProps) => {
       dispatch(updateItem({ id: item.id, item: newItem }));
     }
   }, [item, value]);
+
+  const onFocus = () => {
+    dispatch(toggleMemory(true));
+    dispatch(setSelectable(true));
+  };
 
   return (
     <div className="component-item-content">
@@ -141,6 +152,7 @@ const ItemContent = React.memo(({ item, inputHook }: ItemContentProps) => {
         onKeyDown={onEnter}
         onChange={onChangeValue}
         onBlur={onBlur}
+        onFocus={onFocus}
       />
     </div>
   );

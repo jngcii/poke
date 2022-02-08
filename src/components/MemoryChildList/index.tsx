@@ -18,11 +18,18 @@ export default React.memo(({ parent, editing, visible }: MemoryChildListPropType
   );
 });
 
-const MemoryChildItem = React.memo(({ child }: MemoryChildItemPropTypes) => (
-  <div className="component-memory-child-item-wrapper">
-    {child.content}
-  </div>
-));
+const MemoryChildItem = React.memo(({ child }: MemoryChildItemPropTypes) => {
+  const { selectable } = useSelector((state: RootState) => state.memory);
+
+  return (
+    <div className="component-memory-child-item-wrapper">
+      <div className={`component-memory-child-item-select ${selectable ? 'selectable' : 'non-selectable'}`}>
+        <div className="component-memory-child-item-select-button" onClick={() => console.log('')} />
+      </div>
+      {child.content}
+    </div>
+  );
+});
 
 type MemoryChildListPropTypes = {
   parent: Memory,

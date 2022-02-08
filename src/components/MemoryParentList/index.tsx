@@ -39,7 +39,7 @@ const MemoryParentEmpty = React.memo(() => (
 
 const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
   const {
-    memory: { memories },
+    memory: { memories, selectable },
   } = useSelector((state: RootState) => state);
   const [childrenVisible, setChildrenVisible] = useState(false);
   const [height, setHeight] = useState(undefined);
@@ -67,6 +67,10 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     }
   }, [childrenVisible]);
 
+  useEffect(() => {
+    if (selectable) setChildrenVisible(true);
+  }, [selectable]);
+
   const toggleDraggable = (drag: boolean) => draggable(drag);
 
   const toggleChildrenVisible = () => {
@@ -84,14 +88,19 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     // @ts-ignore
     <div style={outerStyle}>
       <div className="component-memory-parent-item-inner">
-        <MemoryParentContent memory={memory} editing={editing} />
-        <MemoryParentDragger editing={editing} toggleDraggable={toggleDraggable} />
-        <button
-          type="button"
-          onClick={toggleChildrenVisible}
-        >
-          TOGGLE
-        </button>
+        <div className={`component-memory-parent-item-select ${selectable ? 'selectable' : 'non-selectable'}`}>
+          <div className="component-memory-parent-item-select-button" onClick={() => console.log('')} />
+        </div>
+        <div className="component-memory-parent-item">
+          <MemoryParentContent memory={memory} editing={editing} />
+          <MemoryParentDragger editing={editing} toggleDraggable={toggleDraggable} />
+          <button
+            type="button"
+            onClick={toggleChildrenVisible}
+          >
+            TOGGLE
+          </button>
+        </div>
       </div>
       <MemoryChildList
         parent={memory}
