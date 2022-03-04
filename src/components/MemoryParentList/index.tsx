@@ -71,6 +71,10 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     if (selectable) setChildrenVisible(true);
   }, [selectable]);
 
+  const onSelect = () => {
+    console.log('todo : 메모리에서 선택했을 때 적용');
+  };
+
   const toggleDraggable = (drag: boolean) => draggable(drag);
 
   const toggleChildrenVisible = () => {
@@ -89,7 +93,7 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     <div style={outerStyle}>
       <div className="component-memory-parent-item-inner">
         <div className={`component-memory-parent-item-select ${selectable ? 'selectable' : 'non-selectable'}`}>
-          <div className="component-memory-parent-item-select-button" onClick={() => console.log('')} />
+          <div className="component-memory-parent-item-select-button" onClickCapture={onSelect} />
         </div>
         <div className="component-memory-parent-item">
           <MemoryParentContent memory={memory} editing={editing} />
