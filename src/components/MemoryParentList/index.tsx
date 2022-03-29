@@ -67,10 +67,6 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     }
   }, [childrenVisible]);
 
-  useEffect(() => {
-    if (selectable) setChildrenVisible(true);
-  }, [selectable]);
-
   const onSelect = () => {
     console.log('todo : 메모리에서 선택했을 때 적용');
   };

@@ -12,8 +12,7 @@ import { RootState } from '../../redux/store';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import { createInitialItem, createItem } from '../../redux/utils/objectCreator';
 import useInput, { InputHook } from '../../hooks/InputHook';
-import { setFocusedItem, setSelectableAsync } from '../../redux/slices/memorySlice';
-import { toggleMemory } from '../../redux/slices/defaultSlice';
+import { setFocusedItem } from '../../redux/slices/memorySlice';
 import './style.scss';
 
 export default React.memo(({ post, items }: ItemsProps) => {
@@ -131,7 +130,6 @@ const ItemContent = React.memo(({ item, inputHook }: ItemContentProps) => {
   // Blur 당시 Item이 빈문자가 아닐 때에만 Item Update Dispatch
   const onBlur = useCallback(() => {
     dispatch(setFocusedItem(undefined));
-    dispatch(setSelectableAsync(false));
     if (!value || !value.trim()) {
       dispatch(removeItem(item.id));
     } else {
@@ -141,9 +139,7 @@ const ItemContent = React.memo(({ item, inputHook }: ItemContentProps) => {
   }, [item, value]);
 
   const onFocus = () => {
-    dispatch(toggleMemory(true));
     dispatch(setFocusedItem(item));
-    dispatch(setSelectableAsync(true));
   };
 
   return (

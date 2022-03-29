@@ -21,7 +21,8 @@ export const initialState: InitialState = {
 
 const sleep = (n: number) => new Promise((resolve) => setTimeout(resolve, n));
 
-export const setSelectableAsync = createAsyncThunk(
+// 사용하진 않지만 thunk 예시로 남겨둔 코드
+const setSelectableAsync = createAsyncThunk(
   'memories/setSelectableAsync',
   async (to: boolean, { getState, dispatch }) => {
     if (to) {
