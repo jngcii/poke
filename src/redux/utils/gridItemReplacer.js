@@ -1,5 +1,12 @@
 import { key8Factory } from './keyFactory';
 
+/**
+ * 인자로 받은 gridItem.getData()의 order를 새로운 order로 바꾸고, 바뀐 item을 반환하는 함수
+ * @param gridItem
+ * @param currentPosition
+ * @param gridList
+ * @returns {boolean|(*&{order: string})}
+ */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function replace(gridItem, currentPosition, gridList) {
   const item = gridItem.getData();
@@ -13,7 +20,7 @@ function replace(gridItem, currentPosition, gridList) {
 
   const margin = gridItem.getMargin();
   const height = gridItem.getHeight() + margin.top + margin.bottom;
-  const replacedIdx = position / height;
+  const replacedIdx = Math.floor(position / height);
 
   // target : item이 옮겨지는 위치에 원래 있었던 item
   const target = gridList[replacedIdx];
