@@ -55,6 +55,7 @@ const girdProps = {
   },
   dragContainer: document.body,
   dragAxis: 'y',
+  layoutDuration: 0,
 
   // ClassNames
   containerClass: 'item-list-container',

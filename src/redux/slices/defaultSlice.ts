@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type InitialState = {
   isLoggedIn: boolean,
@@ -14,8 +14,12 @@ export const defaultSlice = createSlice({
   name: 'default',
   initialState,
   reducers: {
-    toggleMemory: (state: InitialState) => {
-      state.isMemoryOpen = !state.isMemoryOpen;
+    toggleMemory: (state: InitialState, action: PayloadAction<boolean | undefined>) => {
+      if (!action.payload) {
+        state.isMemoryOpen = !state.isMemoryOpen;
+      } else {
+        state.isMemoryOpen = action.payload;
+      }
     },
   },
 });

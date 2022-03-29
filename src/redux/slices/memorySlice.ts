@@ -1,21 +1,42 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { createRootMemory } from '../utils/objectCreator';
-import { Memory } from '../../types/object';
+import { Item, Memory } from '../../types/object';
 import repository from '../api/repository';
+import { RootState } from '../store';
 
 type InitialState = {
   loadingMemories: boolean,
   failToLoadMemories: boolean,
   memories: Memory[],
-  currentMemoryId: string,
+  selectable: boolean,
+  focusedItem: Item | undefined,
 };
 
 export const initialState: InitialState = {
   loadingMemories: true,
   failToLoadMemories: false,
   memories: [],
-  currentMemoryId: '0',
+  selectable: false,
+  focusedItem: undefined,
 };
+
+const sleep = (n: number) => new Promise((resolve) => setTimeout(resolve, n));
+
+export const setSelectableAsync = createAsyncThunk(
+  'memories/setSelectableAsync',
+  async (to: boolean, { getState, dispatch }) => {
+    if (to) {
+      const { memory: { selectable } } = getState() as RootState;
+      if (selectable) return;
+      dispatch(setSelectable(true));
+    } else {
+      await sleep(300);
+      const { memory: { focusedItem } } = getState() as RootState;
+      if (!focusedItem) {
+        dispatch(setSelectable(false));
+      }
+    }
+  },
+);
 
 export const getAllMemory = createAsyncThunk(
   'memories/getAllMemory',
@@ -44,8 +65,11 @@ export const memorySlice = createSlice({
 
       repository.addMemory(memory);
     },
-    setCurrentMemoryId: (state: InitialState, action: PayloadAction<string>) => {
-      state.currentMemoryId = action.payload;
+    setFocusedItem: (state: InitialState, action: PayloadAction<Item | undefined>) => {
+      state.focusedItem = action.payload;
+    },
+    setSelectable: (state: InitialState, action: PayloadAction<boolean>) => {
+      state.selectable = action.payload;
     },
   },
   extraReducers: {
@@ -65,6 +89,8 @@ export const memorySlice = createSlice({
   },
 });
 
-export const { updateMemory, addMemory, setCurrentMemoryId } = memorySlice.actions;
+export const {
+  updateMemory, addMemory, setSelectable, setFocusedItem,
+} = memorySlice.actions;
 
 export default memorySlice.reducer;

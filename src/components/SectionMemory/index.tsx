@@ -1,9 +1,9 @@
 import React, {
-  Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useState,
+  Dispatch, FormEvent, SetStateAction, useEffect, useState,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import MemoryList from '../MemoryList';
+import MemoryParentList from '../MemoryParentList';
 import HeaderMemory from '../HeaderMemory';
 import useInput from '../../hooks/InputHook';
 import { addMemory } from '../../redux/slices/memorySlice';
@@ -15,7 +15,6 @@ import './style.scss';
 export default React.memo(() => {
   const {
     default: { isMemoryOpen },
-    memory: { memories, currentMemoryId },
   } = useSelector((state: RootState) => state);
   const [editing, setEditing] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -32,29 +31,16 @@ export default React.memo(() => {
     if (!isMemoryOpen) setEditing(false);
   }, [isMemoryOpen]);
 
-  const currentMemories = useMemo(
-    () => memories.filter((it) => it.parentId === currentMemoryId),
-    [memories, currentMemoryId],
-  );
-
-  const currentMemory = useMemo(
-    () => memories.find((it) => it.id === currentMemoryId),
-    [memories, currentMemoryId],
-  );
-
   return visible ? (
     <div className="component-memory-list-wrapper">
       <HeaderMemory editing={editing} setEditing={setEditing} />
 
-      <MemoryList editing={editing} />
-
-      <hr />
-
-      <NewMemoryForm memories={currentMemories} currentMemory={currentMemory} />
+      <MemoryParentList editing={editing} />
     </div>
   ) : <div />;
 });
 
+// todo : 별도의 모듈로 분리
 const NewMemoryForm = React.memo(({ memories, currentMemory }: NewMemoryFormPropTypes) => {
   const dispatch = useDispatch();
   const inputHooks = useInput('');

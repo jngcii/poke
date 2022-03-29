@@ -1,7 +1,7 @@
 import reducer, {
   addMemory,
   getAllMemory,
-  initialState, setCurrentMemoryId,
+  initialState,
 } from '../../../src/redux/slices/memorySlice';
 import configureMockStore from 'redux-mock-store';
 import { createMemory } from '../../../src/redux/utils/objectCreator';
@@ -52,20 +52,6 @@ describe('memory slice reducer test', function () {
     state = reducer(state, addMemory(mockedMemory3));
     expect(state.memories.length).toBe(3);
     expect(state.memories[2]).toEqual(mockedMemory3);
-  });
-  
-  test('dispatching set currentMemoryId', () => {
-    // given
-    let state = {
-      ...initialState,
-      currentMemoryId: '0',
-    };
-  
-    expect(state.currentMemoryId).toEqual('0');
-    // when
-    state = reducer(state, setCurrentMemoryId('1'));
-    // then
-    expect(state.currentMemoryId).toEqual('1');
   });
   
 });
