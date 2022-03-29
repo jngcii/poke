@@ -3,13 +3,19 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useDraggable, useRefresh } from 'muuri-react';
-import { RootState } from '../../redux/store';
 import { Memory } from '../../types/object';
 import MemoryParentGrid from '../MemoryParentGrid';
-import './style.scss';
 import MemoryChildList from '../MemoryChildList';
+import { key8Factory } from '../../redux/utils/keyFactory';
+import { RootState } from '../../redux/store';
+import { addItem } from '../../redux/slices/itemSlice';
+import {
+  createInitialItemByMemory,
+  createItemByMemory,
+} from '../../redux/utils/objectCreator';
+import './style.scss';
 
 export default React.memo(({ editing }: EditingProps) => {
   const [currentMemories, setCurrentMemories] = useState([]);
@@ -39,10 +45,13 @@ const MemoryParentEmpty = React.memo(() => (
 
 const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
   const {
+    post: { currentPost },
+    item: { items },
     memory: { memories, selectable },
   } = useSelector((state: RootState) => state);
   const [childrenVisible, setChildrenVisible] = useState(false);
   const [height, setHeight] = useState(undefined);
+  const dispatch = useDispatch();
 
   const childrenContainerHeight = useMemo(() => {
     const count = memories.filter(
@@ -68,7 +77,22 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
   }, [childrenVisible]);
 
   const onSelect = () => {
-    console.log('todo : 메모리에서 선택했을 때 적용');
+    const filteredItems = items.filter((it) => it.postId === currentPost.id);
+
+    let newItem;
+
+    if (filteredItems.length === 0) {
+      newItem = createInitialItemByMemory(currentPost.id, memory);
+    } else {
+      const sortedItems = filteredItems.length === 1
+        ? filteredItems
+        : filteredItems.sort((before, after) => key8Factory.compare(before.order, after.order));
+      const lastItem = sortedItems[sortedItems.length - 1];
+      const newOrder = key8Factory.build(lastItem.order, undefined);
+      newItem = createItemByMemory(newOrder, currentPost.id, memory.content, memory);
+    }
+
+    dispatch(addItem(newItem));
   };
 
   const toggleDraggable = (drag: boolean) => draggable(drag);
