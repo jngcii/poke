@@ -79,17 +79,20 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
   const onSelect = () => {
     const filteredItems = items.filter((it) => it.postId === currentPost.id);
 
+    const parent = memories.find((it) => it.id === memory.parentId);
+    const prefix = (!parent || parent.id === '0') ? '' : `${parent.content} > `;
+
     let newItem;
 
     if (filteredItems.length === 0) {
-      newItem = createInitialItemByMemory(currentPost.id, memory);
+      newItem = createInitialItemByMemory(currentPost.id, `${prefix}${memory.content}`, memory);
     } else {
       const sortedItems = filteredItems.length === 1
         ? filteredItems
         : filteredItems.sort((before, after) => key8Factory.compare(before.order, after.order));
       const lastItem = sortedItems[sortedItems.length - 1];
       const newOrder = key8Factory.build(lastItem.order, undefined);
-      newItem = createItemByMemory(newOrder, currentPost.id, memory.content, memory);
+      newItem = createItemByMemory(newOrder, currentPost.id, `${prefix}${memory.content}`, memory);
     }
 
     dispatch(addItem(newItem));
@@ -113,7 +116,7 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     <div style={outerStyle}>
       <div className="component-memory-parent-item-inner">
         <div className={`component-memory-parent-item-select ${selectable ? 'selectable' : 'non-selectable'}`}>
-          <div className="component-memory-parent-item-select-button" onClickCapture={onSelect} />
+          <div className="component-memory-parent-item-select-button" onClick={onSelect} />
         </div>
         <div className="component-memory-parent-item">
           <MemoryParentContent memory={memory} editing={editing} />

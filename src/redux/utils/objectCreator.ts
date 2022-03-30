@@ -84,6 +84,6 @@ export function createInitialItem(postId: string): Item {
   return createItem(key8Factory.build(), postId, '', false);
 }
 
-export function createInitialItemByMemory(postId: string, memory: Memory): Item {
-  return createItemByMemory(key8Factory.build(), postId, memory.content, memory);
+export function createInitialItemByMemory(postId: string, content: string, memory: Memory): Item {
+  return createItemByMemory(key8Factory.build(), postId, content, memory);
 }
