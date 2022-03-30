@@ -15,6 +15,8 @@ import {
   createInitialItemByMemory,
   createItemByMemory,
 } from '../../redux/utils/objectCreator';
+import FormMemoryAdd from '../FormMemoryAdd';
+import { rootMemory } from '../../redux/api/mockingRepository';
 import './style.scss';
 
 export default React.memo(({ editing }: EditingProps) => {
@@ -37,6 +39,8 @@ export default React.memo(({ editing }: EditingProps) => {
       <MemoryParentGrid>
         {children}
       </MemoryParentGrid>
+
+      <FormMemoryAdd parent={rootMemory} />
     </div>
   ) : <MemoryParentEmpty />;
 });
@@ -76,7 +80,7 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     } else {
       setHeight(undefined);
     }
-  }, [childrenVisible]);
+  }, [childrenVisible, childrenContainerHeight]);
 
   const onSelect = () => {
     const filteredItems = items.filter((it) => it.postId === currentPost.id);

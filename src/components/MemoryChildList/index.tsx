@@ -6,6 +6,7 @@ import './style.scss';
 import { createInitialItemByMemory, createItemByMemory } from '../../redux/utils/objectCreator';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import { addItem } from '../../redux/slices/itemSlice';
+import FormMemoryAdd from '../FormMemoryAdd';
 
 export default React.memo(({ parent, editing, visible }: MemoryChildListPropTypes) => {
   const { memories } = useSelector((state: RootState) => state.memory);
@@ -17,6 +18,8 @@ export default React.memo(({ parent, editing, visible }: MemoryChildListPropType
   return (
     <div className={`component-memory-child-list-wrapper ${!visible && 'invisible-display'}`}>
       {children}
+
+      <FormMemoryAdd parent={parent} />
     </div>
   );
 });
