@@ -11,8 +11,11 @@ export default React.memo(({ children }) => {
 
   const sortedMemories = useMemo(
     () => (memories.length > 1
-      ? [...memories].sort((before, after) => key8Factory.compare(before.order, after.order))
-      : [...memories]),
+      ? [...memories].filter(
+        (it) => it.parentId === '0' && it.fixed,
+      ).sort(
+        (before, after) => key8Factory.compare(before.order, after.order),
+      ) : [...memories].filter((it) => it.parentId === '0' && it.fixed)),
     [memories],
   );
 

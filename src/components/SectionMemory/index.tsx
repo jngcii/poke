@@ -11,6 +11,7 @@ import { createMemory } from '../../redux/utils/objectCreator';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import { Memory } from '../../types/object';
 import './style.scss';
+import MemorySpareList from '../MemorySpareList';
 
 export default React.memo(() => {
   const {
@@ -36,6 +37,8 @@ export default React.memo(() => {
       <HeaderMemory editing={editing} setEditing={setEditing} />
 
       <MemoryParentList editing={editing} />
+
+      <MemorySpareList />
     </div>
   ) : <div />;
 });

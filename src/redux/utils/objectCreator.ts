@@ -66,6 +66,20 @@ export function createMemory(
   };
 }
 
+export function createSpareMemory(content: string): Memory {
+  return {
+    id: nanoid(),
+    userId: 'tmp',
+    content,
+    order: '00000000',
+    fixed: false,
+    parentId: '0',
+    created: Date.now(),
+    updated: Date.now(),
+    level: 1,
+  };
+}
+
 export function createRootMemory(): Memory {
   return {
     id: '0',

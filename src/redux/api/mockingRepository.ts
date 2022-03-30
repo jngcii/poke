@@ -133,6 +133,12 @@ const mockingRepository = {
 
     resolve();
   }),
+  removeMemory: (memoryId: string): Promise<void> => new Promise((resolve) => {
+    memories = memories.filter((it) => it.id !== memoryId);
+    console.log('Memory removed!');
+
+    resolve();
+  }),
 };
 
 export default mockingRepository;

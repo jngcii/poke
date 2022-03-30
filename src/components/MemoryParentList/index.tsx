@@ -25,7 +25,7 @@ export default React.memo(({ editing }: EditingProps) => {
   } = useSelector((state: RootState) => state);
 
   useEffect(() => {
-    setCurrentMemories(memories.filter((it) => it.parentId === '0'));
+    setCurrentMemories(memories.filter((it) => it.parentId === '0' && it.fixed));
   }, [memories]);
 
   const children = useMemo(() => currentMemories.map((memory) => (
@@ -33,9 +33,11 @@ export default React.memo(({ editing }: EditingProps) => {
   )), [currentMemories, editing]);
 
   return currentMemories.length > 0 ? (
-    <MemoryParentGrid>
-      {children}
-    </MemoryParentGrid>
+    <div>
+      <MemoryParentGrid>
+        {children}
+      </MemoryParentGrid>
+    </div>
   ) : <MemoryParentEmpty />;
 });
 
