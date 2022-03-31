@@ -113,6 +113,7 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
   const outerStyle = {
     position: 'absolute',
     width: '100%',
+    backgroundColor: '#aaa',
     height,
   };
 
