@@ -5,14 +5,32 @@
     transition: 2s;
 }
 
-.component-memory-child-item-wrapper {
-    padding: 5px;
-    border: 5px solid #000;
-    background-color: #fff;
-    margin: 5px auto;
+.component-memory-child-item-outer-dragging {
+    z-index: 9999;
+}
+
+.component-memory-child-item-inner {
+    width: 100%;
+}
+
+.component-memory-child-item {
     display: flex;
     align-items: center;
+    margin: 5px;
+    padding: 5px;
     height: 25px;
+    border: 5px solid #000;
+    background-color: #fff;
+}
+
+.component-memory-child-item-content {
+    flex: 1;
+}
+
+.component-memory-child-item-dragger {
+    width: 20px;
+    height: 20px;
+    background-color: #000;
 }
 
 .component-memory-child-item-select {

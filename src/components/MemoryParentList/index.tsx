@@ -127,13 +127,13 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
         </div>
         <div className="component-memory-parent-item">
           <MemoryParentContent memory={memory} editing={editing} />
-          <MemoryParentDragger editing={editing} toggleDraggable={toggleDraggable} />
           <button
             type="button"
             onClick={toggleChildrenVisible}
           >
             TOGGLE
           </button>
+          <MemoryParentDragger editing={editing} toggleDraggable={toggleDraggable} />
         </div>
       </div>
       <MemoryChildList
