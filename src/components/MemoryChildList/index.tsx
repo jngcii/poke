@@ -17,11 +17,13 @@ export default React.memo(({ parent, editing, visible }: MemoryChildListPropType
     .filter((it) => it.parentId === parent.id)
     .map((it) => <MemoryChildItem key={it.id} memory={it} editing={editing} />);
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const grid = <MemoryChildGrid parent={parent}>{children}</MemoryChildGrid>;
+
   return visible ? (
     <div className="component-memory-child-list-container">
-      <MemoryChildGrid parent={parent}>
-        {children}
-      </MemoryChildGrid>
+      {grid}
 
       <FormMemoryAdd parent={parent} />
     </div>
