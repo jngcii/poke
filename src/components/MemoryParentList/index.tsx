@@ -133,7 +133,7 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
           >
             TOGGLE
           </button>
-          <MemoryParentDragger editing={editing} toggleDraggable={toggleDraggable} />
+          <MemoryParentDragger toggleDraggable={toggleDraggable} />
         </div>
       </div>
       <MemoryChildList
@@ -151,13 +151,13 @@ const MemoryParentContent = React.memo(({ memory, editing }: MemoryProps) => (
   </div>
 ));
 
-const MemoryParentDragger = React.memo(({ editing, toggleDraggable }: DraggerProps) => {
+const MemoryParentDragger = React.memo(({ toggleDraggable }: DraggerProps) => {
   const enableDrag = () => toggleDraggable(true);
   const disableDrag = () => toggleDraggable(false);
 
   return (
     <div
-      className={`component-memory-parent-item-dragger ${!editing && 'invisible-display'}`}
+      className="component-memory-parent-item-dragger"
       onMouseOver={enableDrag}
       onMouseLeave={disableDrag}
     />
@@ -166,4 +166,4 @@ const MemoryParentDragger = React.memo(({ editing, toggleDraggable }: DraggerPro
 
 type EditingProps = { editing: boolean };
 type MemoryProps = { memory: Memory, editing: boolean };
-type DraggerProps = { editing: boolean, toggleDraggable: (drag: boolean) => void };
+type DraggerProps = { toggleDraggable: (drag: boolean) => void };
