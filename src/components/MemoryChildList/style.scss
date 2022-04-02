@@ -5,6 +5,10 @@
     transition: 2s;
 }
 
+.component-memory-child-list-container {
+    overflow: hidden;
+}
+
 .component-memory-child-item-outer-dragging {
     z-index: 9999;
 }
