@@ -14,6 +14,10 @@
     margin: 5px 0;
 }
 
+.component-memory-parent-item-outer-dragging {
+    z-index: 9999;
+}
+
 .children-visible {
     height: 200px;
 }

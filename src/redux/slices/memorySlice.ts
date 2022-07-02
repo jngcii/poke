@@ -21,7 +21,8 @@ export const initialState: InitialState = {
 
 const sleep = (n: number) => new Promise((resolve) => setTimeout(resolve, n));
 
-export const setSelectableAsync = createAsyncThunk(
+// 사용하진 않지만 thunk 예시로 남겨둔 코드
+const setSelectableAsync = createAsyncThunk(
   'memories/setSelectableAsync',
   async (to: boolean, { getState, dispatch }) => {
     if (to) {
@@ -35,6 +36,22 @@ export const setSelectableAsync = createAsyncThunk(
         dispatch(setSelectable(false));
       }
     }
+  },
+);
+
+// addMemory 이전에 fixed=false memory가 5개 이상일 경우 4개로 만들어주는 thunk 함수
+export const addMemoryThunk = createAsyncThunk(
+  'memories/addMemoryThunk',
+  async (memory: Memory, { getState, dispatch }) => {
+    const { memory: { memories } } = getState() as RootState;
+    let spareMemories = [...memories].filter((it) => !it.fixed);
+
+    while (spareMemories.length >= 5) {
+      dispatch(removeMemory(spareMemories[0].id));
+      spareMemories = spareMemories.slice(1);
+    }
+
+    dispatch(addMemory(memory));
   },
 );
 
@@ -65,6 +82,13 @@ export const memorySlice = createSlice({
 
       repository.addMemory(memory);
     },
+    removeMemory: (state: InitialState, action: PayloadAction<string>) => {
+      const memoryId = action.payload;
+
+      state.memories = state.memories.filter((it) => it.id !== memoryId);
+
+      repository.removeMemory(memoryId);
+    },
     setFocusedItem: (state: InitialState, action: PayloadAction<Item | undefined>) => {
       state.focusedItem = action.payload;
     },
@@ -90,7 +114,7 @@ export const memorySlice = createSlice({
 });
 
 export const {
-  updateMemory, addMemory, setSelectable, setFocusedItem,
+  updateMemory, addMemory, removeMemory, setSelectable, setFocusedItem,
 } = memorySlice.actions;
 
 export default memorySlice.reducer;

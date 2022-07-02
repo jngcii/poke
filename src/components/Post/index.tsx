@@ -12,12 +12,22 @@ import { createInitialItem, createItem } from '../../redux/utils/objectCreator';
 import { addItem } from '../../redux/slices/itemSlice';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import useInput from '../../hooks/InputHook';
+import { setSelectable } from '../../redux/slices/memorySlice';
 
 export default React.memo(() => {
   const {
     post: { currentPost },
     item: { items },
   } = useSelector((state: RootState) => state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!currentPost) {
+      dispatch(setSelectable(false));
+    } else {
+      dispatch(setSelectable(true));
+    }
+  }, [currentPost]);
 
   return currentPost ? (
     <div className="component-post-wrapper">

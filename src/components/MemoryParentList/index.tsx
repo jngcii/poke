@@ -3,13 +3,21 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useDraggable, useRefresh } from 'muuri-react';
-import { RootState } from '../../redux/store';
 import { Memory } from '../../types/object';
 import MemoryParentGrid from '../MemoryParentGrid';
-import './style.scss';
 import MemoryChildList from '../MemoryChildList';
+import { key8Factory } from '../../redux/utils/keyFactory';
+import { RootState } from '../../redux/store';
+import { addItem } from '../../redux/slices/itemSlice';
+import {
+  createInitialItemByMemory,
+  createItemByMemory,
+} from '../../redux/utils/objectCreator';
+import FormMemoryAdd from '../FormMemoryAdd';
+import { rootMemory } from '../../redux/api/mockingRepository';
+import './style.scss';
 
 export default React.memo(({ editing }: EditingProps) => {
   const [currentMemories, setCurrentMemories] = useState([]);
@@ -19,7 +27,7 @@ export default React.memo(({ editing }: EditingProps) => {
   } = useSelector((state: RootState) => state);
 
   useEffect(() => {
-    setCurrentMemories(memories.filter((it) => it.parentId === '0'));
+    setCurrentMemories(memories.filter((it) => it.parentId === '0' && it.fixed));
   }, [memories]);
 
   const children = useMemo(() => currentMemories.map((memory) => (
@@ -27,9 +35,13 @@ export default React.memo(({ editing }: EditingProps) => {
   )), [currentMemories, editing]);
 
   return currentMemories.length > 0 ? (
-    <MemoryParentGrid>
-      {children}
-    </MemoryParentGrid>
+    <div>
+      <MemoryParentGrid>
+        {children}
+      </MemoryParentGrid>
+
+      <FormMemoryAdd parent={rootMemory} />
+    </div>
   ) : <MemoryParentEmpty />;
 });
 
@@ -39,10 +51,13 @@ const MemoryParentEmpty = React.memo(() => (
 
 const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
   const {
+    post: { currentPost },
+    item: { items },
     memory: { memories, selectable },
   } = useSelector((state: RootState) => state);
   const [childrenVisible, setChildrenVisible] = useState(false);
   const [height, setHeight] = useState(undefined);
+  const dispatch = useDispatch();
 
   const childrenContainerHeight = useMemo(() => {
     const count = memories.filter(
@@ -65,14 +80,28 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     } else {
       setHeight(undefined);
     }
-  }, [childrenVisible]);
-
-  useEffect(() => {
-    if (selectable) setChildrenVisible(true);
-  }, [selectable]);
+  }, [childrenVisible, childrenContainerHeight]);
 
   const onSelect = () => {
-    console.log('todo : 메모리에서 선택했을 때 적용');
+    const filteredItems = items.filter((it) => it.postId === currentPost.id);
+
+    const parent = memories.find((it) => it.id === memory.parentId);
+    const prefix = (!parent || parent.id === '0') ? '' : `${parent.content} > `;
+
+    let newItem;
+
+    if (filteredItems.length === 0) {
+      newItem = createInitialItemByMemory(currentPost.id, `${prefix}${memory.content}`, memory);
+    } else {
+      const sortedItems = filteredItems.length === 1
+        ? filteredItems
+        : filteredItems.sort((before, after) => key8Factory.compare(before.order, after.order));
+      const lastItem = sortedItems[sortedItems.length - 1];
+      const newOrder = key8Factory.build(lastItem.order, undefined);
+      newItem = createItemByMemory(newOrder, currentPost.id, `${prefix}${memory.content}`, memory);
+    }
+
+    dispatch(addItem(newItem));
   };
 
   const toggleDraggable = (drag: boolean) => draggable(drag);
@@ -84,6 +113,7 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
   const outerStyle = {
     position: 'absolute',
     width: '100%',
+    backgroundColor: '#aaa',
     height,
   };
 
@@ -93,17 +123,17 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     <div style={outerStyle}>
       <div className="component-memory-parent-item-inner">
         <div className={`component-memory-parent-item-select ${selectable ? 'selectable' : 'non-selectable'}`}>
-          <div className="component-memory-parent-item-select-button" onClickCapture={onSelect} />
+          <div className="component-memory-parent-item-select-button" onClick={onSelect} />
         </div>
         <div className="component-memory-parent-item">
           <MemoryParentContent memory={memory} editing={editing} />
-          <MemoryParentDragger editing={editing} toggleDraggable={toggleDraggable} />
           <button
             type="button"
             onClick={toggleChildrenVisible}
           >
             TOGGLE
           </button>
+          <MemoryParentDragger toggleDraggable={toggleDraggable} />
         </div>
       </div>
       <MemoryChildList
@@ -121,13 +151,13 @@ const MemoryParentContent = React.memo(({ memory, editing }: MemoryProps) => (
   </div>
 ));
 
-const MemoryParentDragger = React.memo(({ editing, toggleDraggable }: DraggerProps) => {
+const MemoryParentDragger = React.memo(({ toggleDraggable }: DraggerProps) => {
   const enableDrag = () => toggleDraggable(true);
   const disableDrag = () => toggleDraggable(false);
 
   return (
     <div
-      className={`component-memory-parent-item-dragger ${!editing && 'invisible-display'}`}
+      className="component-memory-parent-item-dragger"
       onMouseOver={enableDrag}
       onMouseLeave={disableDrag}
     />
@@ -136,4 +166,4 @@ const MemoryParentDragger = React.memo(({ editing, toggleDraggable }: DraggerPro
 
 type EditingProps = { editing: boolean };
 type MemoryProps = { memory: Memory, editing: boolean };
-type DraggerProps = { editing: boolean, toggleDraggable: (drag: boolean) => void };
+type DraggerProps = { toggleDraggable: (drag: boolean) => void };

@@ -27,6 +27,24 @@ export function createItem(order: string, postId: string, content: string, done:
   };
 }
 
+export function createItemByMemory(
+  order: string,
+  postId: string,
+  content: string,
+  memory: Memory,
+): Item {
+  return {
+    id: nanoid(),
+    order,
+    postId,
+    content,
+    done: false,
+    memoryId: memory.id,
+    added: Date.now(),
+    updated: Date.now(),
+  };
+}
+
 export function createMemory(
   order: string,
   content: string,
@@ -48,6 +66,20 @@ export function createMemory(
   };
 }
 
+export function createSpareMemory(content: string): Memory {
+  return {
+    id: nanoid(),
+    userId: 'tmp',
+    content,
+    order: '00000000',
+    fixed: false,
+    parentId: '0',
+    created: Date.now(),
+    updated: Date.now(),
+    level: 1,
+  };
+}
+
 export function createRootMemory(): Memory {
   return {
     id: '0',
@@ -64,4 +96,8 @@ export function createRootMemory(): Memory {
 
 export function createInitialItem(postId: string): Item {
   return createItem(key8Factory.build(), postId, '', false);
+}
+
+export function createInitialItemByMemory(postId: string, content: string, memory: Memory): Item {
+  return createItemByMemory(key8Factory.build(), postId, content, memory);
 }
