@@ -13,18 +13,25 @@
     z-index: 9999;
 }
 
-.component-memory-child-item-inner {
+.component-memory-child-item-wrapper {
+    display: flex;
+    align-items: center;
+    height: 45px;
     width: 100%;
+}
+
+.component-memory-child-item-inner {
+    display: flex;
+    align-items: center;
+    border: 5px solid #000;
+    margin: 5px;
+    padding: 5px;
+    background-color: #fff;
 }
 
 .component-memory-child-item {
     display: flex;
-    align-items: center;
-    margin: 5px;
-    padding: 5px;
-    height: 25px;
-    border: 5px solid #000;
-    background-color: #fff;
+    flex: 1;
 }
 
 .component-memory-child-item-content {

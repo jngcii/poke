@@ -68,14 +68,16 @@ const MemoryChildItem = React.memo(({ memory, editing }: MemoryProps) => {
   const toggleDraggable = (drag: boolean) => draggable(drag);
 
   return (
-    <div className="component-memory-child-item-inner">
-      <div className={`component-memory-child-item-select ${selectable ? 'selectable' : 'non-selectable'}`}>
-        <div className="component-memory-child-item-select-button" onClick={onSelect} />
-      </div>
+    <div className="component-memory-child-item-wrapper">
+      <div className="component-memory-child-item-inner">
+        <div className={`component-memory-child-item-select ${selectable ? 'selectable' : 'non-selectable'}`}>
+          <div className="component-memory-child-item-select-button" onClick={onSelect} />
+        </div>
 
-      <div className="component-memory-child-item">
-        <MemoryChildContent memory={memory} editing={editing} />
-        <MemoryChildDragger toggleDraggable={toggleDraggable} />
+        <div className="component-memory-child-item">
+          <MemoryChildContent memory={memory} editing={editing} />
+          <MemoryChildDragger toggleDraggable={toggleDraggable} />
+        </div>
       </div>
     </div>
   );
