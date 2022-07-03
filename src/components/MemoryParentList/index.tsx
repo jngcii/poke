@@ -6,7 +6,7 @@ import React, {
 import { useDispatch, useSelector } from 'react-redux';
 import { useDraggable, useRefresh } from 'muuri-react';
 import { Memory } from '../../types/object';
-import MemoryParentGrid from '../MemoryParentGrid';
+import MemoryGrid from '../MemoryGrid';
 import MemoryChildList from '../MemoryChildList';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import { RootState } from '../../redux/store';
@@ -36,9 +36,7 @@ export default React.memo(({ editing }: EditingProps) => {
 
   return currentMemories.length > 0 ? (
     <div>
-      <MemoryParentGrid>
-        {children}
-      </MemoryParentGrid>
+      <MemoryGrid>{children}</MemoryGrid>
 
       <FormMemoryAdd parent={rootMemory} />
     </div>

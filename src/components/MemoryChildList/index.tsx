@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useDraggable } from 'muuri-react';
 import { RootState } from '../../redux/store';
 import { Memory } from '../../types/object';
+import MemoryGrid from '../MemoryGrid';
 import { createInitialItemByMemory, createItemByMemory } from '../../redux/utils/objectCreator';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import { addItem } from '../../redux/slices/itemSlice';
 import FormMemoryAdd from '../FormMemoryAdd';
-import MemoryChildGrid from '../MemoryChildGrid';
 import './style.scss';
 
 export default React.memo(({ parent, editing, visible }: MemoryChildListPropTypes) => {
@@ -19,7 +19,7 @@ export default React.memo(({ parent, editing, visible }: MemoryChildListPropType
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const grid = <MemoryChildGrid parent={parent}>{children}</MemoryChildGrid>;
+  const grid = <MemoryGrid parent={parent}>{children}</MemoryGrid>;
 
   return visible ? (
     <div className="component-memory-child-list-container">
