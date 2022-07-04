@@ -12,7 +12,7 @@ import { createInitialItem, createItem } from '../../redux/utils/objectCreator';
 import { addItem } from '../../redux/slices/itemSlice';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import useInput from '../../hooks/InputHook';
-import { setSelectable } from '../../redux/slices/memorySlice';
+import { setPickable } from '../../redux/slices/memorySlice';
 
 export default React.memo(() => {
   const {
@@ -23,9 +23,9 @@ export default React.memo(() => {
 
   useEffect(() => {
     if (!currentPost) {
-      dispatch(setSelectable(false));
+      dispatch(setPickable(false));
     } else {
-      dispatch(setSelectable(true));
+      dispatch(setPickable(true));
     }
   }, [currentPost]);
 

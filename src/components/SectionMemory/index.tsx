@@ -1,12 +1,13 @@
 import React, {
   Dispatch, SetStateAction, useEffect, useState,
 } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import MemoryParentList from '../MemoryParentList';
 import HeaderMemory from '../HeaderMemory';
 import './style.scss';
 import MemorySpareList from '../MemorySpareList';
+import { clearSelectedMemories } from '../../redux/slices/memorySlice';
 
 export default React.memo(() => {
   const {
@@ -14,6 +15,7 @@ export default React.memo(() => {
   } = useSelector((state: RootState) => state);
   const [editing, setEditing] = useState(false);
   const [visible, setVisible] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isMemoryOpen) {
@@ -22,6 +24,12 @@ export default React.memo(() => {
       setVisible(false);
     }
   }, [isMemoryOpen]);
+
+  useEffect(() => {
+    if (!editing) {
+      dispatch(clearSelectedMemories());
+    }
+  }, [editing]);
 
   useEffect(() => {
     if (!isMemoryOpen) setEditing(false);

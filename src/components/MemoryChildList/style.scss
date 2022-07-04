@@ -44,7 +44,7 @@
     background-color: #000;
 }
 
-.component-memory-child-item-select {
+.component-memory-child-item-pick {
     transition: 0.3s;
     overflow: hidden;
     background-color: red;
@@ -52,19 +52,24 @@
     border-radius: 5px;
 }
 
-.selectable {
+.pickable {
     width: 20px;
     height: 20px;
 }
 
-.non-selectable {
+.non-pickable {
     width: 0;
     height: 0;
 }
 
-.component-memory-child-item-select-button {
+.component-memory-child-item-pick-button {
     width: 100%;
     height: 100%;
+}
+
+.component-memory-child-item-select {
+    overflow: hidden;
+    margin: 0 5px;
 }
 
 .invisible-display {

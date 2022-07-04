@@ -1,39 +1,44 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { useMemo } from 'react';
 import { Item, Memory } from '../../types/object';
 import repository from '../api/repository';
 import { RootState } from '../store';
+import { rootMemory } from '../api/mockingRepository';
+import { key8Factory } from '../utils/keyFactory';
 
 type InitialState = {
   loadingMemories: boolean,
   failToLoadMemories: boolean,
   memories: Memory[],
-  selectable: boolean,
+  pickable: boolean,
   focusedItem: Item | undefined,
+  selectedMemories: Memory[],
 };
 
 export const initialState: InitialState = {
   loadingMemories: true,
   failToLoadMemories: false,
   memories: [],
-  selectable: false,
+  pickable: false,
   focusedItem: undefined,
+  selectedMemories: [],
 };
 
 const sleep = (n: number) => new Promise((resolve) => setTimeout(resolve, n));
 
 // 사용하진 않지만 thunk 예시로 남겨둔 코드
-const setSelectableAsync = createAsyncThunk(
-  'memories/setSelectableAsync',
+const setPickableAsync = createAsyncThunk(
+  'memories/setPickableAsync',
   async (to: boolean, { getState, dispatch }) => {
     if (to) {
-      const { memory: { selectable } } = getState() as RootState;
-      if (selectable) return;
-      dispatch(setSelectable(true));
+      const { memory: { pickable } } = getState() as RootState;
+      if (pickable) return;
+      dispatch(setPickable(true));
     } else {
       await sleep(300);
       const { memory: { focusedItem } } = getState() as RootState;
       if (!focusedItem) {
-        dispatch(setSelectable(false));
+        dispatch(setPickable(false));
       }
     }
   },
@@ -89,11 +94,58 @@ export const memorySlice = createSlice({
 
       repository.removeMemory(memoryId);
     },
+    removeSelectedMemories: (state: InitialState) => {
+      const selectedMemoryIds = state.selectedMemories.map((it) => it.id);
+      const childrenIds = state.memories
+        .filter((it) => selectedMemoryIds.includes(it.parentId))
+        .map((it) => it.id);
+      const memoryIds = [...selectedMemoryIds, ...childrenIds];
+
+      state.memories = state.memories.filter((it) => !memoryIds.includes(it.id));
+
+      repository.removeMemories(memoryIds);
+    },
     setFocusedItem: (state: InitialState, action: PayloadAction<Item | undefined>) => {
       state.focusedItem = action.payload;
     },
-    setSelectable: (state: InitialState, action: PayloadAction<boolean>) => {
-      state.selectable = action.payload;
+    setPickable: (state: InitialState, action: PayloadAction<boolean>) => {
+      state.pickable = action.payload;
+    },
+    addSelectedMemory: (state: InitialState, action: PayloadAction<Memory>) => {
+      state.selectedMemories = state.selectedMemories.concat(action.payload);
+      console.log(state.selectedMemories);
+    },
+    removeSelectedMemory: (state: InitialState, action: PayloadAction<Memory>) => {
+      const { id } = action.payload;
+      state.selectedMemories = state.selectedMemories.filter((it) => it.id !== id);
+    },
+    clearSelectedMemories: (state: InitialState) => {
+      state.selectedMemories = [];
+    },
+    updateMemoriesToTopLevel: (state: InitialState) => {
+      const sortedMemories = state.memories.length > 1
+        ? state.memories.sort((before, after) => key8Factory.compare(before.order, after.order))
+        : state.memories;
+
+      let lastOrder = sortedMemories.length === 0
+        ? undefined
+        : sortedMemories[sortedMemories.length - 1].order;
+
+      const newMemories = state.selectedMemories
+        .map((it) => {
+          if (it.parentId === rootMemory.id) return it;
+          lastOrder = key8Factory.build(lastOrder);
+          return { ...it, parentId: rootMemory.id, order: lastOrder };
+        });
+      const newMemoryIds = newMemories.map((it) => it.id);
+
+      state.memories = state.memories.map(
+        (memory) => (newMemoryIds.includes(memory.id)
+          ? newMemories.find((it) => it.id === memory.id)
+          : memory),
+      );
+
+      repository.updateMemoriesLevel(newMemories);
     },
   },
   extraReducers: {
@@ -114,7 +166,16 @@ export const memorySlice = createSlice({
 });
 
 export const {
-  updateMemory, addMemory, removeMemory, setSelectable, setFocusedItem,
+  updateMemory,
+  addMemory,
+  removeMemory,
+  removeSelectedMemories,
+  setPickable,
+  setFocusedItem,
+  addSelectedMemory,
+  removeSelectedMemory,
+  clearSelectedMemories,
+  updateMemoriesToTopLevel,
 } = memorySlice.actions;
 
 export default memorySlice.reducer;

@@ -18,6 +18,7 @@ import {
 import FormMemoryAdd from '../FormMemoryAdd';
 import { rootMemory } from '../../redux/api/mockingRepository';
 import './style.scss';
+import { addSelectedMemory, removeSelectedMemory } from '../../redux/slices/memorySlice';
 
 export default React.memo(({ editing }: EditingProps) => {
   const [currentMemories, setCurrentMemories] = useState([]);
@@ -48,14 +49,9 @@ const MemoryParentEmpty = React.memo(() => (
 ));
 
 const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
-  const {
-    post: { currentPost },
-    item: { items },
-    memory: { memories, selectable },
-  } = useSelector((state: RootState) => state);
+  const { memory: { memories } } = useSelector((state: RootState) => state);
   const [childrenVisible, setChildrenVisible] = useState(false);
   const [height, setHeight] = useState(undefined);
-  const dispatch = useDispatch();
 
   const childrenContainerHeight = useMemo(() => {
     const count = memories.filter(
@@ -80,7 +76,54 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     }
   }, [childrenVisible, childrenContainerHeight]);
 
-  const onSelect = () => {
+  const toggleDraggable = (drag: boolean) => draggable(drag);
+
+  const toggleChildrenVisible = () => {
+    setChildrenVisible((prev) => !prev);
+  };
+
+  const outerStyle = {
+    position: 'absolute',
+    width: '100%',
+    backgroundColor: '#aaa',
+    height,
+  };
+
+  return (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    <div style={outerStyle}>
+      <div className="component-memory-parent-item-inner">
+        {editing
+          ? <MemoryParentSelect memory={memory} editing={editing} />
+          : <MemoryParentPick memory={memory} editing={editing} />}
+
+        <div className="component-memory-parent-item">
+          <MemoryParentContent memory={memory} editing={editing} />
+          {!editing && <MemoryParentDragger toggleDraggable={toggleDraggable} />}
+          <button type="button" onClick={toggleChildrenVisible}>
+            TOGGLE
+          </button>
+        </div>
+      </div>
+      <MemoryChildList
+        parent={memory}
+        editing={editing}
+        visible={childrenVisible}
+      />
+    </div>
+  );
+});
+
+const MemoryParentPick = React.memo(({ memory, editing }: MemoryProps) => {
+  const {
+    post: { currentPost },
+    item: { items },
+    memory: { memories, pickable },
+  } = useSelector((state: RootState) => state);
+  const dispatch = useDispatch();
+
+  const onPick = () => {
     const filteredItems = items.filter((it) => it.postId === currentPost.id);
 
     const parent = memories.find((it) => it.id === memory.parentId);
@@ -102,43 +145,40 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     dispatch(addItem(newItem));
   };
 
-  const toggleDraggable = (drag: boolean) => draggable(drag);
+  return (
+    <div className={`component-memory-parent-item-pick ${pickable ? 'pickable' : 'non-pickable'}`}>
+      <div className="component-memory-parent-item-pick-button" onClick={onPick} />
+    </div>
+  );
+});
 
-  const toggleChildrenVisible = () => {
-    setChildrenVisible((prev) => !prev);
+const MemoryParentSelect = React.memo(({ memory, editing }: MemoryProps) => {
+  const [isSelected, setIsSelected] = useState(false);
+  const { memory: { selectedMemories } } = useSelector((state: RootState) => state);
+  const dispatch = useDispatch();
+
+  const onSelect = () => {
+    setIsSelected((prev) => !prev);
   };
 
-  const outerStyle = {
-    position: 'absolute',
-    width: '100%',
-    backgroundColor: '#aaa',
-    height,
-  };
+  useEffect(() => {
+    setIsSelected(
+      selectedMemories
+        .map((it) => it.id)
+        .includes(memory.id),
+    );
+  }, [selectedMemories]);
+
+  useEffect(() => {
+    const action = isSelected ? addSelectedMemory(memory) : removeSelectedMemory(memory);
+    dispatch(action);
+
+    console.log(`Clicked! : ${isSelected}`);
+  }, [isSelected]);
 
   return (
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    <div style={outerStyle}>
-      <div className="component-memory-parent-item-inner">
-        <div className={`component-memory-parent-item-select ${selectable ? 'selectable' : 'non-selectable'}`}>
-          <div className="component-memory-parent-item-select-button" onClick={onSelect} />
-        </div>
-        <div className="component-memory-parent-item">
-          <MemoryParentContent memory={memory} editing={editing} />
-          <button
-            type="button"
-            onClick={toggleChildrenVisible}
-          >
-            TOGGLE
-          </button>
-          <MemoryParentDragger toggleDraggable={toggleDraggable} />
-        </div>
-      </div>
-      <MemoryChildList
-        parent={memory}
-        editing={editing}
-        visible={childrenVisible}
-      />
+    <div className="component-memory-parent-item-select">
+      <input type="checkbox" onChange={onSelect} checked={isSelected} />
     </div>
   );
 });

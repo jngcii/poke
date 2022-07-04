@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDraggable } from 'muuri-react';
 import { RootState } from '../../redux/store';
 import { Memory } from '../../types/object';
 import MemoryGrid from '../MemoryGrid';
+import FormMemoryAdd from '../FormMemoryAdd';
 import { createInitialItemByMemory, createItemByMemory } from '../../redux/utils/objectCreator';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import { addItem } from '../../redux/slices/itemSlice';
-import FormMemoryAdd from '../FormMemoryAdd';
+import { addSelectedMemory, removeSelectedMemory } from '../../redux/slices/memorySlice';
 import './style.scss';
 
 export default React.memo(({ parent, editing, visible }: MemoryChildListPropTypes) => {
@@ -31,14 +32,38 @@ export default React.memo(({ parent, editing, visible }: MemoryChildListPropType
 });
 
 const MemoryChildItem = React.memo(({ memory, editing }: MemoryProps) => {
+  const draggable = useDraggable();
+
+  useEffect(() => {
+    draggable(false);
+  }, []);
+  const toggleDraggable = (drag: boolean) => draggable(drag);
+
+  return (
+    <div className="component-memory-child-item-wrapper">
+      <div className="component-memory-child-item-inner">
+        {editing
+          ? <MemoryChildSelect memory={memory} editing={editing} />
+          : <MemoryChildPick memory={memory} editing={editing} />}
+
+        <div className="component-memory-child-item">
+          <MemoryChildContent memory={memory} editing={editing} />
+          {!editing && <MemoryChildDragger toggleDraggable={toggleDraggable} />}
+        </div>
+      </div>
+    </div>
+  );
+});
+
+const MemoryChildPick = React.memo(({ memory, editing }: MemoryProps) => {
   const {
     post: { currentPost },
     item: { items },
-    memory: { memories, selectable },
+    memory: { memories, pickable },
   } = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
 
-  const onSelect = () => {
+  const onPick = () => {
     const filteredItems = items.filter((it) => it.postId === currentPost.id);
 
     const parent = memories.find((it) => it.id === memory.parentId);
@@ -60,25 +85,31 @@ const MemoryChildItem = React.memo(({ memory, editing }: MemoryProps) => {
     dispatch(addItem(newItem));
   };
 
-  const draggable = useDraggable();
+  return (
+    <div className={`component-memory-child-item-pick ${pickable ? 'pickable' : 'non-pickable'}`}>
+      <div className="component-memory-child-item-pick-button" onClick={onPick} />
+    </div>
+  );
+});
+
+const MemoryChildSelect = React.memo(({ memory, editing }: MemoryProps) => {
+  const [isSelected, setIsSelected] = useState(false);
+  const dispatch = useDispatch();
+
+  const onSelect = () => {
+    setIsSelected((prev) => !prev);
+  };
 
   useEffect(() => {
-    draggable(false);
-  }, []);
-  const toggleDraggable = (drag: boolean) => draggable(drag);
+    const action = isSelected ? addSelectedMemory(memory) : removeSelectedMemory(memory);
+    dispatch(action);
+
+    console.log(`Clicked! : ${isSelected}`);
+  }, [isSelected]);
 
   return (
-    <div className="component-memory-child-item-wrapper">
-      <div className="component-memory-child-item-inner">
-        <div className={`component-memory-child-item-select ${selectable ? 'selectable' : 'non-selectable'}`}>
-          <div className="component-memory-child-item-select-button" onClick={onSelect} />
-        </div>
-
-        <div className="component-memory-child-item">
-          <MemoryChildContent memory={memory} editing={editing} />
-          <MemoryChildDragger toggleDraggable={toggleDraggable} />
-        </div>
-      </div>
+    <div className="component-memory-child-item-select">
+      <input type="checkbox" onChange={onSelect} checked={isSelected} />
     </div>
   );
 });
