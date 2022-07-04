@@ -38,9 +38,9 @@ let memories = [
   createMemory('C0000000', 'memory-3', true, rootMemory.id, 1, '3'),
   createMemory('D0000000', 'memory-4', true, rootMemory.id, 1, '4'),
   createMemory('E0000000', 'memory-5', true, rootMemory.id, 1, '5'),
-  createMemory('A0000000', 'child-memory-1', true, '1', 2),
-  createMemory('B0000000', 'child-memory-2', true, '1', 2),
-  createMemory('A0000000', 'child-memory-3', true, '2', 2),
+  createMemory('A0000000', 'child-memory-1', true, '1', 2, '6'),
+  createMemory('B0000000', 'child-memory-2', true, '1', 2, '7'),
+  createMemory('A0000000', 'child-memory-3', true, '2', 2, '8'),
 ];
 
 const mockingRepository = {
@@ -135,9 +135,26 @@ const mockingRepository = {
 
     resolve();
   }),
+  updateMemoriesLevel: (newMemories: Memory[]): Promise<void> => new Promise((resolve) => {
+    const newMemoryIds = newMemories.map((it) => it.id);
+
+    memories = memories.map(
+      (memory) => (newMemoryIds.includes(memory.id)
+        ? { ...newMemories.find((it) => it.id === memory.id) }
+        : memory),
+    );
+
+    resolve();
+  }),
   removeMemory: (memoryId: string): Promise<void> => new Promise((resolve) => {
     memories = memories.filter((it) => it.id !== memoryId);
     console.log('Memory removed!');
+
+    resolve();
+  }),
+  removeMemories: (memoryIds: string[]): Promise<void> => new Promise((resolve) => {
+    memories = [...memories].filter((it) => !memoryIds.includes(it.id));
+    console.log(`Memories removed! ${memoryIds}`);
 
     resolve();
   }),

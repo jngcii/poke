@@ -8,7 +8,7 @@ export default React.memo(({ editing, setEditing }: EditingPropTypes) => {
   };
 
   return (
-    <div className="component-button-category-edit-wrapper">
+    <div className="component-button-memory-edit-wrapper">
       <button
         type="button"
         onClick={onClickEditButton}
