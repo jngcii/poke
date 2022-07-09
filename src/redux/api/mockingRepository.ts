@@ -135,7 +135,7 @@ const mockingRepository = {
 
     resolve();
   }),
-  updateMemoriesLevel: (newMemories: Memory[]): Promise<void> => new Promise((resolve) => {
+  updateMemories: (newMemories: Memory[]): Promise<void> => new Promise((resolve) => {
     const newMemoryIds = newMemories.map((it) => it.id);
 
     memories = memories.map(

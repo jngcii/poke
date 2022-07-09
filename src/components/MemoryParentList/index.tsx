@@ -1,4 +1,5 @@
 import React, {
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -10,15 +11,20 @@ import MemoryGrid from '../MemoryGrid';
 import MemoryChildList from '../MemoryChildList';
 import { key8Factory } from '../../redux/utils/keyFactory';
 import { RootState } from '../../redux/store';
+import { rootMemory } from '../../redux/api/mockingRepository';
 import { addItem } from '../../redux/slices/itemSlice';
 import {
   createInitialItemByMemory,
   createItemByMemory,
 } from '../../redux/utils/objectCreator';
+import {
+  addSelectedMemory,
+  removeSelectedMemory,
+  updateInEditing,
+  updateMemoriesParent,
+} from '../../redux/slices/memorySlice';
 import FormMemoryAdd from '../FormMemoryAdd';
-import { rootMemory } from '../../redux/api/mockingRepository';
 import './style.scss';
-import { addSelectedMemory, removeSelectedMemory } from '../../redux/slices/memorySlice';
 
 export default React.memo(({ editing }: EditingProps) => {
   const [currentMemories, setCurrentMemories] = useState([]);
@@ -49,9 +55,15 @@ const MemoryParentEmpty = React.memo(() => (
 ));
 
 const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
-  const { memory: { memories } } = useSelector((state: RootState) => state);
+  const {
+    memory: {
+      memories,
+      inEditing,
+    },
+  } = useSelector((state: RootState) => state);
   const [childrenVisible, setChildrenVisible] = useState(false);
   const [height, setHeight] = useState(undefined);
+  const dispatch = useDispatch();
 
   const childrenContainerHeight = useMemo(() => {
     const count = memories.filter(
@@ -76,6 +88,17 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     }
   }, [childrenVisible, childrenContainerHeight]);
 
+  useEffect(() => {
+    if (inEditing && childrenVisible) {
+      setChildrenVisible(false);
+    }
+  }, [inEditing]);
+
+  const onIn = useCallback(() => {
+    if (inEditing) {
+      dispatch(updateMemoriesParent(memory.id));
+    }
+  }, [memory, inEditing]);
   const toggleDraggable = (drag: boolean) => draggable(drag);
 
   const toggleChildrenVisible = () => {
@@ -93,17 +116,24 @@ const MemoryParentItem = React.memo(({ memory, editing }: MemoryProps) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     <div style={outerStyle}>
-      <div className="component-memory-parent-item-inner">
-        {editing
+      <div
+        className={`component-memory-parent-item-inner ${inEditing && 'in-editing-hover'}`}
+        onClick={onIn}
+      >
+        {!inEditing && (editing
           ? <MemoryParentSelect memory={memory} editing={editing} />
-          : <MemoryParentPick memory={memory} editing={editing} />}
+          : <MemoryParentPick memory={memory} editing={editing} />)}
 
         <div className="component-memory-parent-item">
           <MemoryParentContent memory={memory} editing={editing} />
-          {!editing && <MemoryParentDragger toggleDraggable={toggleDraggable} />}
-          <button type="button" onClick={toggleChildrenVisible}>
-            TOGGLE
-          </button>
+          {!editing && !inEditing && (
+            <MemoryParentDragger toggleDraggable={toggleDraggable} />
+          )}
+          {!inEditing && (
+            <button type="button" onClick={toggleChildrenVisible}>
+              TOGGLE
+            </button>
+          )}
         </div>
       </div>
       <MemoryChildList
