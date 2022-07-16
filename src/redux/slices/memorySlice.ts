@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { useMemo } from 'react';
 import { Item, Memory } from '../../types/object';
 import repository from '../api/repository';
 import { RootState } from '../store';
@@ -13,6 +12,7 @@ type InitialState = {
   pickable: boolean,
   focusedItem: Item | undefined,
   selectedMemories: Memory[],
+  inEditing: boolean
 };
 
 export const initialState: InitialState = {
@@ -22,6 +22,7 @@ export const initialState: InitialState = {
   pickable: false,
   focusedItem: undefined,
   selectedMemories: [],
+  inEditing: false,
 };
 
 const sleep = (n: number) => new Promise((resolve) => setTimeout(resolve, n));
@@ -104,6 +105,8 @@ export const memorySlice = createSlice({
       state.memories = state.memories.filter((it) => !memoryIds.includes(it.id));
 
       repository.removeMemories(memoryIds);
+
+      state.selectedMemories = [];
     },
     setFocusedItem: (state: InitialState, action: PayloadAction<Item | undefined>) => {
       state.focusedItem = action.payload;
@@ -145,7 +148,59 @@ export const memorySlice = createSlice({
           : memory),
       );
 
-      repository.updateMemoriesLevel(newMemories);
+      repository.updateMemories(newMemories);
+
+      state.selectedMemories = [];
+    },
+    updateInEditing: (state: InitialState, action: PayloadAction<boolean | undefined>) => {
+      if (action.payload === undefined) {
+        state.inEditing = !state.inEditing;
+      } else {
+        state.inEditing = action.payload;
+      }
+      if (!state.inEditing) {
+        state.selectedMemories = [];
+      }
+    },
+    updateMemoriesParent: (state: InitialState, action: PayloadAction<string>) => {
+      const parent = state.memories.find((it) => it.id === action.payload);
+      if (!parent) {
+        console.error('UPDATE MEMORIES PARENT ERROR!');
+      }
+      const children = state.memories.filter((it) => it.parentId === parent.id);
+
+      const sortedChildren = children.length > 1
+        ? children.sort((before, after) => key8Factory.compare(before.order, after.order))
+        : children;
+      console.log('UPDATING MEMORIES PARENT');
+      console.log(sortedChildren);
+
+      let lastOrder = sortedChildren.length === 0
+        ? undefined
+        : sortedChildren[sortedChildren.length - 1].order;
+
+      const newMemories = [...state.selectedMemories]
+        .map((child) => {
+          if (child.id === parent.id) return child;
+          if (child.parentId === parent.id) return child;
+          lastOrder = key8Factory.build(lastOrder);
+          return { ...child, parentId: parent.id, order: lastOrder };
+        });
+      const newMemoryIds = newMemories.map((it) => it.id);
+
+      console.log('UPDATING MEMORIES PARENT');
+      console.log(newMemories);
+
+      state.memories = state.memories.map(
+        (memory) => (newMemoryIds.includes(memory.id)
+          ? newMemories.find((it) => it.id === memory.id)
+          : memory),
+      );
+
+      repository.updateMemories(newMemories);
+
+      state.inEditing = false;
+      state.selectedMemories = [];
     },
   },
   extraReducers: {
@@ -176,6 +231,8 @@ export const {
   removeSelectedMemory,
   clearSelectedMemories,
   updateMemoriesToTopLevel,
+  updateInEditing,
+  updateMemoriesParent,
 } = memorySlice.actions;
 
 export default memorySlice.reducer;

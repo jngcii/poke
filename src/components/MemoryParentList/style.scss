@@ -29,6 +29,11 @@
     padding: 5px;
 }
 
+.in-editing-hover:hover {
+    border-color: blue;
+    cursor: pointer;
+}
+
 .component-memory-parent-item-pick {
     transition: 0.3s;
     overflow: hidden;

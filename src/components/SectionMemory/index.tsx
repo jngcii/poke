@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import MemoryParentList from '../MemoryParentList';
 import HeaderMemory from '../HeaderMemory';
-import './style.scss';
 import MemorySpareList from '../MemorySpareList';
-import { clearSelectedMemories } from '../../redux/slices/memorySlice';
+import { clearSelectedMemories, updateInEditing } from '../../redux/slices/memorySlice';
+import './style.scss';
 
 export default React.memo(() => {
   const {
@@ -28,6 +28,7 @@ export default React.memo(() => {
   useEffect(() => {
     if (!editing) {
       dispatch(clearSelectedMemories());
+      dispatch(updateInEditing(false));
     }
   }, [editing]);
 
